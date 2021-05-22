@@ -1,0 +1,306 @@
+/*********************************** 
+  || Table of Contents          ||
+	|| *default styles*				  	||
+  ||  A. General Styles         ||      
+  ||  B. Content                ||   
+  ||   ..Typography             ||
+  ||   ..Tables                 ||
+  ||  C. Color Styles           ||    
+  ||  D. Components             ||  
+	||	 ..Button: pill	         	||       
+	||   ..Modal       	        	||       
+  ||  E. Layout/Utilities       ||  
+	||   ..Display        		    ||
+	||   ..Flex: *row     		    ||
+  ||  F. Site Sections          ||
+  ||  G. For Javascript         ||
+***********************************/
+
+/* || A. GENERAL STYLES */
+* {
+	box-sizing: border-box;
+}
+html,
+body,
+main {
+	font-family: 'Open Sans', sans-serif;
+	width: 100vw;
+	max-width: 100%; /* added - horizontal scroll is present because of the vertical scroll*/
+}
+main {
+	min-height: 100vh;
+}
+section,
+form {
+	width: 100vw;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+span {
+	display: block;
+}
+a {
+	color: black;
+}
+button {
+	display: inline-block;
+	font-size: 1rem;
+}
+/* || B. CONTENT */
+/* || ...Typography */
+.h1,
+h1 {
+	font-family: 'Lobster', cursive;
+	font-size: 3rem;
+	text-align: center;
+}
+h2 {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1.8rem;
+	font-weight: 700;
+	padding: 0.8rem 0;
+}
+h3 {
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+input {
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+}
+th {
+	letter-spacing: 1px;
+	font-weight: 500;
+}
+em {
+	font-weight: 700;
+}
+
+.text-lg {
+	font-size: 3.5rem;
+	font-weight: 900;
+}
+.text-m {
+	font-size: 2rem;
+	font-weight: 700;
+}
+/* || ...Tables */
+table {
+	margin: 10px 0;
+	width: 100%;
+}
+
+th {
+	background-color: rgb(246, 88, 106);
+	color: white;
+	border-right: 2px solid #ddd;
+}
+th,
+td {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #ddd;
+}
+td {
+	vertical-align: middle;
+	padding-left: 15px;
+}
+tr:hover {
+	background-color: #f5f5f5;
+}
+/* || C. COLOR STYLES */
+.text-white {
+	color: #fff;
+}
+.text-primary {
+	color: rgb(235, 51, 73);
+}
+/* || D. COMPONENTS */
+/* || ...Forms */
+label {
+	display: inline-block;
+	/* vertical | horizontal */
+	margin: 0.5rem 0;
+}
+input {
+	display: block;
+	width: 100%;
+	/* vertical | horizontal */
+	padding: 0.375rem 0.75rem;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+}
+input:focus,
+input:active {
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+.btn-grp {
+	margin-top: 10px;
+}
+/* || ...Button */
+.btn {
+	background-color: rgb(235, 51, 73);
+	/* width | styles | color */
+	border: 1px solid transparent;
+	border-radius: 16px;
+	cursor: pointer;
+	display: inline-block;
+	/* vertical | horizontal */
+	padding: 0.4rem 1.5rem;
+	text-align: center;
+	vertical-align: middle;
+}
+.btn-sm {
+	padding: 0.2rem 0.2rem;
+}
+.btn-grey {
+	background-color: grey;
+}
+.text-white.btn:hover,
+.text-white.btn:focus {
+	background-color: whitesmoke;
+	color: rgb(235, 51, 73);
+	border: 1.5px solid rgb(235, 51, 73);
+	font-weight: 600;
+}
+/* || ...Circle Button */
+.btn-circle {
+	border-radius: 50%;
+	padding: 0.2rem;
+	width: 1.5em;
+	height: 1.5em;
+}
+/* || E. LAYOUT/UTILITIES */
+/* || ...Display */
+.d-block {
+	display: block;
+	text-align: center;
+}
+/* || ...Flex */
+.d-flex {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.flex-row {
+	flex-direction: row;
+}
+.align-self-end {
+	align-self: flex-end;
+}
+.flex-grow {
+	flex-grow: 1;
+}
+/* || ...Grid */
+.grid {
+	display: grid;
+	grid-template-columns: 50vw 50vw;
+}
+/* || ...Spacing */
+.mt-2 {
+	margin-top: 20px;
+}
+.mr-1 {
+	margin-right: 10px;
+}
+.mr-2 {
+	margin-right: 20px;
+}
+.mb-2 {
+	margin-bottom: 20px;
+}
+.p-2 {
+	padding: 20px;
+}
+/* || ...Text Alignment */
+.text-center {
+	text-align: center;
+}
+/* || F. SITE SECTIONS */
+/* Multiple Sections */
+.tab {
+	padding-left: 10px;
+	padding-right: 10px;
+	border-top: 2px solid rgb(235, 51, 73);
+}
+/* Section 1: Login Page*/
+.sec-log {
+	min-height: 100vh;
+	padding: 20px 20px;
+}
+/* Section 3 & 4: DashBoard*/
+.card {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	justify-content: space-evenly;
+	align-items: center;
+	background-color: rgb(235, 51, 73);
+	padding: 10px 0;
+}
+/* Section 5: User Admin */
+.sec-user {
+	min-height: 100vh;
+}
+.user-dash {
+	justify-content: space-around;
+	width: 100%;
+}
+.user-item {
+	background-color: whitesmoke;
+	padding: 10px;
+	border-radius: 6px;
+}
+.card > span {
+	margin-bottom: 10px;
+}
+.card > p {
+	margin: 2px 0;
+}
+.navbar {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	justify-content: space-evenly;
+}
+.nav-items {
+	display: flex;
+	flex-direction: column;
+	width: calc(calc(100vw - 50px) / 5);
+	justify-content: space-between;
+	border-radius: 5px;
+	border: 1px solid transparent;
+	padding: 7px;
+	box-shadow: rgba(235, 51, 73, 0.25) 0px 0.0625em 0.0625em, rgba(235, 51, 73, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+}
+@media screen and (orientation: landscape) and (min-width: 768px) {
+	.nav-items {
+		width: calc(calc(100vh - 50px) / 5);
+	}
+}
+.nav-items > span {
+	font-size: 0.8rem;
+}
+@media screen and (min-width: 768px) {
+	.nav-items > span {
+		font-size: 1.2rem;
+	}
+}
+div.nav-items {
+	width: 100%;
+}
+/* Section 7: Pay Bills */
+.btn-bill-add {
+	position: relative;
+	top: 15px;
+}
+/* || G. FOR JAVASCRIPT */
+.d-none {
+	display: none;
+}

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Banking App</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lobster&family=Open+Sans:wght@400;600;700;800&family=Roboto:ital,wght@0,300;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/v4-shims.css" />
+		<link rel="stylesheet" href="styles/reset.css" />
+		<link rel="stylesheet" href="styles/banking.css" />
+	</head>
+	<body>
+		<!-- Section 1: Login Page -->
+		<section class="sec-log">
+			<i class="fas fa-piggy-bank fa-5x text-primary d-block"></i>
+			<h1 class="text-primary">myBank</h1>
+			<h2 class="text-primary mt-2">Log In</h2>
+			<form action="" method="POST">
+				<fieldset>
+					<label for="login-user">Username*</label>
+					<input type="text" name="login-user" id="login-user" required />
+					<label for="login-password">Password*</label>
+					<input type="password" name="login-pwd" id="login-pwd" required />
+					<div class="btn-grp d-flex flex-row mt-2">
+						<button type="reset" class="btn text-white mr-2">Reset</button>
+						<button type="submit" class="btn text-white">Submit</button>
+					</div>
+				</fieldset>
+				<p class="text-center mt-2">Don't have an account? <em class="text-primary">Sign Up!</em></p>
+			</form>
+		</section>
+		<!-- Section 2: Sign Up Page -->
+		<section class="d-none">
+			<h2 class="text-primary">Sign Up</h2>
+			<p>Please fill in this form to create an account.</p>
+			<hr />
+			<form action="" method="POST">
+				<label for="newusr-acctno">Account Number</label>
+				<input type="text" name="newusr-acctno" id="newusr-acctno" placeholder="123456789000" />
+				<label for="newusr-firstname">First Name</label>
+				<input type="text" id="newusr-firstname" name="newusr-firstname" placeholder="Enter first name" />
+				<label for="newusr-lastname">Last Name</label>
+				<input type="text" name="newusr-lastname" id="newusr-lastname" placeholder="Enter last name" />
+				<label for="newusr-username">User Name</label>
+				<input type="text" name="newusr-username" id="newusr-username" placeholder="Enter username" />
+				<label for="newusr-email">Email</label>
+				<input type="email" name="newusr-email" id="newusr-email" placeholder="Enter email address" />
+				<label for="newusr-password">Password</label>
+				<input type="password" name="newusr-password" id="newusr-password" placeholder="Enter password" />
+				<label for="newusr-chkpassword">Confirm Password</label>
+				<input type="password" name="newusr-chkpassword" id="newusr-chkpassword" placeholder="Re-enter password" />
+				<div class="btn-grp text-center mt-2">
+					<button type="reset" class="btn text-white" id="btn-reset">Reset</button>
+					<button type="submit" class="btn text-white" id="btn-signup">Sign Up</button>
+				</div>
+			</form>
+		</section>
+		<main>
+			<!-- Section 3: DashBoard: Account Holder -->
+			<section class="view-default">
+				<div class="card">
+					<span class="text-lg text-white acct-bal">Php 24.00</span>
+					<p class="text-white">Account Number: <em id="acct-no">123456789870</em></p>
+					<p class="text-white">Complete Name: <em id="acct-name">GABRIEL, ANNA YSABEL</em></p>
+				</div>
+				<ul class="navbar mt-2">
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/150256-200.png" alt="" />
+						<span class="text-center">Cash <br />In</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/3006512-200.png" alt="" />
+						<span class="text-center">Pay Bills</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/3010973-200.png" alt="" />
+						<span class="text-center">Send Money</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/2146328-200.png" alt="" />
+						<span class="text-center">Cash Out</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/3749724-200.png" alt="" />
+						<span class="text-center">Manage Budget</span>
+					</li>
+				</ul>
+				<h2 class="text-primary">Transaction History</h2>
+				<div class="d-none">
+					<h2 class="text-primary">Transaction History</h2>
+					<table>
+						<tr>
+							<th>Date</th>
+							<th>Transaction Type</th>
+							<th>Amount</th>
+						</tr>
+						<tr>
+							<td>May 18, 2021</td>
+							<td>Deposit</td>
+							<td>$ 500</td>
+						</tr>
+					</table>
+				</div>
+			</section>
+			<!-- Section 4: DashBoard: Bank Manager -->
+			<section class="view-bankmgr">
+				<div class="card">
+					<span class="text-lg text-white acct-bal">Php 24.00</span>
+					<p class="text-white">MAIN BRANCH</p>
+					<p class="text-white acct-holder-count">3 ACCOUNT HOLDERS</p>
+				</div>
+				<ul class="navbar mt-2">
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/150256-200.png" alt="" />
+						<span class="text-center">Cash<br />In</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/3006512-200.png" alt="" />
+						<span class="text-center">Pay<br />Bills</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/3010973-200.png" alt="" />
+						<span class="text-center">Bank Transfers</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/2146328-200.png" alt="" />
+						<span class="text-center">Withdrawals</span>
+					</li>
+					<li class="nav-items">
+						<img src="https://static.thenounproject.com/png/81095-200.png" alt="" />
+						<span class="text-center">Account<br />Holders</span>
+					</li>
+				</ul>
+				<h2 class="text-primary">Transaction History</h2>
+			</section>
+			<!-- Section 5: Dashboard: User Admin -->
+			<section class="sec-user">
+				<div class="card">
+					<span class="text-lg text-white">3 users</span>
+					<ul class="d-flex flex-row user-dash">
+						<li class="text-center user-item">
+							<span class="text-m">3</span>
+							Account<br />Holders
+						</li>
+						<li class="text-center user-item">
+							<span class="text-m">3</span>
+							<p>Bank<br />Managers</p>
+						</li>
+						<li class="text-center user-item">
+							<span class="text-m">1</span>
+							System<br />Admin
+						</li>
+					</ul>
+				</div>
+				<div class="p-2">
+					<h2 class="text-primary">Manage Users</h2>
+					<table>
+						<tr>
+							<th>Username</th>
+							<th>Permissions</th>
+							<th>Action</th>
+						</tr>
+						<tr>
+							<td>annagabriel</td>
+							<td>
+								Account Holder
+								<!-- 							<select name="user-perm" id="user-perm">
+								<option value="">Select Permission</option>
+								<option value="default">Account Holder</option>
+								<option value="bankmgr">Bank Manager</option>
+								<option value="admin">System Administrator</option>
+							</select> -->
+							</td>
+							<td>
+								<span class="far fa-edit"></span>
+							</td>
+						</tr>
+					</table>
+					<div class="btn-grp">
+						<button type="submit" class="btn text-white">Submit</button>
+					</div>
+				</div>
+			</section>
+			<!-- Section 6: Cash In -->
+			<section class="tab">
+				<h2 class="text-primary">Cash In</h2>
+				<fieldset class="view-default">
+					<div class="form-grp">
+						<label for="deposit-amt">Amount</label>
+						<input type="number" name="deposit-amt" id="deposit-amt" min="0" />
+					</div>
+				</fieldset>
+				<fieldset class="d-flex flex-row view-bankmgr">
+					<div class="form-grp mr-1 flex-grow">
+						<label for="bnk-deposit-recpt">Account Number</label>
+						<input type="number" name="deposit-recpt" id="bnk-deposit-recpt" placeholder="123456789000" />
+					</div>
+					<div class="form-grp flex-grow">
+						<label for="bnk-deposit-amt">Amount</label>
+						<input type="number" name="deposit-amt" id="bnk-deposit-amt" min="0" />
+					</div>
+				</fieldset>
+				<div class="btn-grp mt-2 mb-2">
+					<button type="submit" class="btn text-white">Submit</button>
+				</div>
+			</section>
+
+			<!-- Section 7: Pay Bills -->
+			<section class="tab">
+				<h2 class="text-primary">Pay Bills</h2>
+				<fieldset class="d-flex flex-row view-default">
+					<div class="form-grp mr-1 flex-grow">
+						<label for="paybill-biller">Biller</label>
+						<input type="text" name="paybill-biller" id="paybill-biller" />
+					</div>
+					<div class="form-grp mr-1 flex-grow">
+						<label for="paybill-amt">Amount</label>
+						<input type="number" name="paybill-amt" id="paybill-amt" min="0" />
+					</div>
+					<button class="btn btn-circle btn-grey text-white btn-bill-add">+</button>
+				</fieldset>
+				<fieldset class="view-bankmgr">
+					<label for="bnk-paybill-acctNo">Account Number</label>
+					<input type="number" name="paybill-recpt" id="bnk-paybill-acctNo" placeholder="123456789000" />
+					<fieldset class="d-flex flex-row">
+						<div class="form-grp mr-1 flex-grow">
+							<label for="bnk-paybill-biller">Biller</label>
+							<input type="text" name="paybill-biller" id="bnk-paybill-biller" />
+						</div>
+						<div class="form-grp mr-1 flex-grow">
+							<label for="bnk-paybill-amt">Amount</label>
+							<input type="number" name="paybill-amt" id="bnk-paybill-amt" min="0" />
+						</div>
+						<button class="btn btn-circle btn-grey text-white btn-bill-add">+</button>
+					</fieldset>
+				</fieldset>
+				<div class="btn-grp mb-2">
+					<button type="submit" class="btn text-white">Submit</button>
+				</div>
+			</section>
+			<!-- Section 8: Transfer Funds -->
+			<section class="tab">
+				<h2 class="text-primary">Transfer Funds</h2>
+				<fieldset class="d-flex flex-row view-default">
+					<div class="form-grp mr-1 flex-grow">
+						<label for="transfer-to">Transfer to:</label>
+						<input type="number" name="transfer-to" id="transfer-to" placeholder="123456780070" />
+					</div>
+					<div class="form-grp flex-grow">
+						<label for="transfer-amt">Amount</label>
+						<input type="number" name="transfer-amt" id="transfer-amt" min="0" />
+					</div>
+				</fieldset>
+				<fieldset class="view-bankmgr">
+					<label for="bnk-transfer-from">Transfer from:</label>
+					<input type="number" name="transfer-from" id="bnk-transfer-from" placeholder="123456780070" />
+					<fieldset class="d-flex flex-row">
+						<div class="form-grp mr-1 flex-grow">
+							<label for="bnk-transfer-to">Transfer to:</label>
+							<input type="number" name="transfer-to" id="bnk-transfer-to" placeholder="123456780070" />
+						</div>
+						<div class="form-grp flex-grow">
+							<label for="bnk-transfer-amt">Amount</label>
+							<input type="number" name="transfer-amt" id="bnk-transfer-amt" min="0" />
+						</div>
+					</fieldset>
+				</fieldset>
+				<div class="btn-grp mb-2">
+					<button type="submit" class="btn text-white">Submit</button>
+				</div>
+			</section>
+			<!-- Section 9: Withdraw Funds -->
+			<section class="tab">
+				<h2 class="text-primary">Withdraw Funds</h2>
+				<fieldset class="view-default">
+					<label for="withdrw-amt">Amount</label>
+					<input type="number" name="withdrw-amt" id="withdrw-amt" />
+				</fieldset>
+				<fieldset class="view-bankmgr d-flex flex-row">
+					<div class="form-grp mr-1 flex-grow">
+						<label for="bnk-withdrw-recpt">Account Number</label>
+						<input type="number" name="withdrw-recpt" id="bnk-withdrw-recpt" placeholder="123456789000" />
+					</div>
+					<div class="form-grp flex-grow">
+						<label for="bnk-withdrw-amt">Amount</label>
+						<input type="number" name="withdrw-amt" id="bnk-withdrw-amt" />
+					</div>
+				</fieldset>
+				<div class="btn-grp mb-2">
+					<button type="submit" class="btn text-white">Submit</button>
+				</div>
+			</section>
+			<!-- Section 10: Manage Account Holders -->
+			<section class="tab">
+				<h2 class="text-primary">Manage Account Holders</h2>
+				<h3>New Account Holders</h3>
+				<table>
+					<tr>
+						<th>Account Number</th>
+						<th>Complete Name</th>
+						<th>Initial Balance</th>
+						<th>Action</th>
+					</tr>
+					<tr>
+						<td>123445677890</td>
+						<td>GABRIEL, ANNA YSABEL</td>
+						<td>$ 0.00</td>
+						<td>
+							<button class="btn btn-circle btn-grey text-white">+</button>
+						</td>
+					</tr>
+				</table>
+				<h3>Existing Account Holders</h3>
+				<table id="list-acctHolders">
+					<tr>
+						<th>Account Number</th>
+						<th>Complete Name</th>
+						<th>Balance</th>
+						<th>Action</th>
+					</tr>
+					<tr>
+						<td>1234 4567 7890 0000</td>
+						<td>GABRIEL, ANNA YSABEL</td>
+						<td>$ 24.00</td>
+						<td>
+							<span class="far fa-edit"></span>
+							<span class="far fa-trash-alt"></span>
+						</td>
+					</tr>
+				</table>
+			</section>
+			<!-- Section 11: Reports-->
+			<!-- Popup Message Box -->
+		</main>
+		<script src="/scripts/banking.js"></script>
+	</body>
+</html>
