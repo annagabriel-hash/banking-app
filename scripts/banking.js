@@ -13,7 +13,7 @@
  ******************************************************************* */
 const accountHolders = [];
 const Users = [];
-const activeUser = 'bankmgr'; // To check what type of user is using the web
+const activeUser = 'default'; // To check what type of user is using the web
 /* ====================
 			DOM elements
 ==================== */
@@ -23,8 +23,6 @@ const getResetBtns = document.querySelector('button[type="reset"]');
 const getSubmitBtns = document.querySelectorAll('button[type="submit"]');
 // || Section 2: Sign Up Page
 const getSignUpBtn = document.querySelector('#btn-signup');
-// || Section 3 & 4: Dashboard
-const getAcctBal = document.querySelectorAll('button[type="reset"]');
 // || Section 3: Account Holder Dashboard
 const getNavItemsAcct = document.querySelector('.view-default .nav-items');
 const getAcctNo = document.querySelector('#acct-no');
@@ -57,6 +55,7 @@ class BankAccount {
 		this.acctNo = acctNo;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.completeName = `${lastName}, ${firstName}`;
 		this.transactions = [];
 		this.initialBal(startBalance);
 	}
@@ -80,7 +79,7 @@ class BankAccount {
 	 */
 	initialBal(amt) {
 		// 1. Add to transaction history
-		this.transactions.push(new Transaction('Initial Balance', amt));
+		this.transactions.push(new Transaction('Initial Balance', formatNum(amt)));
 		// 2. Update new balance
 		this.balance = amt;
 	}
@@ -93,7 +92,7 @@ class BankAccount {
 		// 1. Add amt to balance of user
 		this.balance += amt;
 		// 2. Add to transaction history
-		this.transactions.push(new Transaction('Deposit', amt));
+		this.transactions.push(new Transaction('Deposit', formatNum(amt)));
 		console.log(`Added ${amt}. New Balance is ${this.balance}`);
 		return this.balance;
 	}
@@ -106,7 +105,7 @@ class BankAccount {
 		// 1. Deduct amt to balance of user
 		this.balance -= amt;
 		// 2. Add to transaction history
-		this.transactions.push(new Transaction('Withdrawal', amt));
+		this.transactions.push(new Transaction('Withdrawal', formatNum(amt)));
 		console.log(`Deducted ${amt}. New Balance is ${this.balance}`);
 		return this.balance;
 	}
@@ -119,7 +118,7 @@ class BankAccount {
 		// 1. Deduct amt of payment
 		this.balance -= amt;
 		// 2. Update transaction history
-		this.transactions.push(new Transaction(`Paid biller: ${biller}`, amt));
+		this.transactions.push(new Transaction(`Paid biller: ${biller}`, formatNum(amt)));
 		console.log(`Paid Php ${amt} to ${biller}. New Balance is ${this.balance}`);
 		return this.balance;
 	}
@@ -134,15 +133,15 @@ class BankAccount {
 		// 2. Deduct balance from user (transfer from)
 		this.balance -= amt;
 		// 3. Update transaction history (transfer from)
-		this.transactions.push(new Transaction(`Sent to: ${toUser}`, amt));
+		this.transactions.push(new Transaction(`Sent to: ${toUser}`, formatNum(amt)));
 		// 4. Add balance to user (transfer to)
 		userToTransfer.balance += amt;
 		// 3. Update transaction history (transfer to)
-		userToTransfer.transactions.push(new Transaction(`Received from: ${this.acctNo}`, amt));
+		userToTransfer.transactions.push(new Transaction(`Received from: ${this.acctNo}`, formatNum(amt)));
 		console.log(`Transferred ${amt} from account no:${this.acctNo} to account no:${toUser}`);
 	}
 	getBalance() {
-		return `Php ${this.balance}`;
+		return formatNum(this.balance);
 	}
 }
 // Class to easily create user
@@ -151,6 +150,8 @@ class User {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.lastName = lastName;
+		this.completeName = `${lastName}, ${firstName}`;
 		this.email = email;
 		this.password = password;
 		this.userType = userType;
@@ -177,7 +178,7 @@ class User {
  ** Return    :   */
 
 /*
- ** Function  : Search account
+ ** Function  : Search bank account
  ** Parameters: Account number (number)
  ** Return    : Bank account object */
 function searchAcctHolder(acctNo) {
@@ -190,16 +191,82 @@ function searchAcctHolder(acctNo) {
 		console.log('Account number not found');
 	}
 }
-
+/*
+ ** Function  : Search user
+ ** Parameters: Username (string)
+ ** Return    : User object */
+function searchUser(username) {
+	try {
+		// Account Holder found
+		let user = Users.find((User) => User.username === username);
+		return user;
+	} catch (error) {
+		// Account Holder not found
+		console.log('User not found');
+	}
+}
+/*
+ ** Function  : Display account holders */
+function dispAcctHolder() {
+	// 1. Display in console
+	console.table(accountHolders);
+}
+/*
+ ** Function  : Display account balance */
+function dispAcctBalance(username) {
+	// 1. Display in console
+	console.table(accountHolders);
+	// 2. Display account balance in HTML
+	let getAcctBal;
+	if (activeUser === 'bankmgr') {
+		getAcctBal = document.querySelectorAll('.acct-bal')[1];
+	} else {
+		getAcctBal = document.querySelectorAll('.acct-bal')[0];
+	}
+	// 3. Search username balance
+	let searchUser = Users.find((User) => User.username === username);
+	getAcctBal.textContent = formatNum(searchUser.getBalance());
+}
+/*
+ ** Function  : Create new table row
+ ** Parameters: Account holder (obj) */
+function createTblRow() {}
+/*
+ ** Function  : Format number
+ ** Parameters: Number
+ ** Return    : Formatted number  */
+function formatNum(num) {
+	let formatNum = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'PHP',
+		currencySign: 'accounting',
+	}).format(num);
+	return formatNum;
+}
 /* ****************************************************************
  **
  ** 			                      	DOM
  **
  ******************************************************************* */
 // Test Data
-accountHolders.push(new BankAccount('123456789870', 'ANNA YSABEL', 'GABRIEL', 200));
+// New Account Holder
+accountHolders.push(new BankAccount('123456789870', 'ANNA YSABEL', 'GABRIEL', 200.5));
 accountHolders.push(new BankAccount('123456789871', 'MARTNEY', 'ACHA', 500));
-
+// New User
+accountHolders[0].createUser('AGABRIEL', 'yssgabriel@gmail.com', '1234');
+let userBank = searchAcctHolder(getAcctNo.textContent);
+// || Section 1: Login Page
+// This will run once the user logins
+getSubmitBtns[0].addEventListener('click', (e) => {
+	// 1. Prevent submitting of form (default behavior)
+	e.preventDefault();
+	// 2. Get account number and cash in amount
+	let getUser = document.querySelector('#login-user').value;
+	// 3. Search for user
+	let userObj = searchUser(getUser);
+	// 4. Display account balance and user details
+	console.log(userObj);
+});
 // || Section 6: Cash In
 getSubmitBtns[3].addEventListener('click', () => {
 	// 1. Get account number and cash in amount
