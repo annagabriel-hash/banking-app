@@ -380,7 +380,7 @@ function dispAcctBalance(username) {
 	getAcctBal.textContent = formatNum(acctBal);
 }
 function getBalanceofAll() {
-	let balance;
+	let balance = 0;
 	bankAccounts.forEach((bankAccount) => {
 		balance += bankAccount.balance;
 	});
@@ -453,6 +453,8 @@ bankAccounts.push(new BankAccount('123456789872', 'JUAN', 'DELA CRUZ', 1000));
 // New User
 createUser('AGABRIEL', 'ANNA YSABEL', 'GABRIEL', 'yssgabriel@gmail.com', '1234', 'default', '123456789870');
 createUser('MACHA', 'MARTNEY', 'ACHA', 'macha@gmail.com', '1234', 'default', '123456789871');
+createUser('BANKMGR', 'ANNABELLE', 'LEE', 'macha@gmail.com', '1234', 'bankmgr');
+createUser('SYSADMIN', 'SYSTEM', 'ADMIN', 'macha@gmail.com', '1234', 'sysadmin');
 
 // || Section 1: Login Page
 // This will run once the user inputs username
@@ -481,6 +483,9 @@ getSubmitBtns[0].addEventListener('click', (e) => {
 		activeUser = userObj.userType;
 		// 5. Display account balance, account number and account name
 		if (activeUser === 'bankmgr') {
+			dispAcctBalance(userObj.username);
+			document.querySelector('#acct-no').parentElement.innerHTML = `Branch: <em id="acct-no">MAIN BRANCH</em>`;
+			document.querySelector('#acct-name').parentElement.innerHTML = `Bank Manager: <em id="acct-name">${userObj.completeName}</em>`;
 		} else if (activeUser === 'admin') {
 		} else {
 			// User is an account holder
@@ -593,6 +598,7 @@ getNavItems.forEach((navItem) => {
 		getActionTabs[index].classList.remove('d-none');
 	});
 });
+getNavItems[4].addEventListener('click', dispAcctHolder);
 // || Section 6: Cash In
 getSubmitBtns[2].addEventListener('click', () => {
 	// 1. Get account number and cash in amount
