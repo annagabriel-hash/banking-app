@@ -125,8 +125,8 @@ function isLoggedIn() {
 		}
 		return false;
 	} else {
-		console.log(userObj);
-		alert('Login Successful');
+		// 4. Show Notificaton
+		showNotif('Login successful', 'success');
 		setSuccessMsg(getLoginUser);
 		setSuccessMsg(getLoginPwd);
 		return true;
@@ -421,12 +421,26 @@ function dispAcctBalance(username) {
 	}
 	getAcctBal.textContent = formatNum(acctBal);
 }
+// getBalance of all users
 function getBalanceofAll() {
 	let balance = 0;
 	bankAccounts.forEach((bankAccount) => {
 		balance += bankAccount.balance;
 	});
 	return balance;
+}
+// Creates alert notifications
+function showNotif(message, type) {
+	getNotif.innerHTML = message;
+	if (type === 'success') {
+		getNotif.className = 'alert alert-success';
+	} else {
+		getNotif.className = 'alert alert-warning';
+	}
+	getNotif.classList.remove('d-none');
+	setTimeout(() => {
+		getNotif.className = 'alert d-none';
+	}, 1000);
 }
 /* ************************************
  ** 	     	 CLASSES
@@ -662,6 +676,8 @@ getSubmitBtns[2].addEventListener('click', () => {
 	clearInputValues(getInputAcctNo, getInputAmt);
 	// 4. Display new balance
 	dispAcctBalance(userObj.username);
+	// 5. Show Notificaton
+	showNotif('Cash in successful', 'success');
 });
 // || Section 5: Pay Bills
 getSubmitBtns[3].addEventListener('click', () => {
@@ -738,19 +754,7 @@ getNewAcctHolder.addEventListener('submit', (e) => {
 	// 4. Display update account holders
 	dispAcctHolder();
 });
-// || Notificiation
-function showNotif(message, type) {
-	getNotif.innerText = message;
-	if (type === 'success') {
-		getNotif.className = 'alert alert-success';
-	} else {
-		getNotif.className = 'alert alert-warning';
-	}
-	getNotif.classList.remove('d-none');
-	setTimeout(() => {
-		getNotif.className = 'alert d-none';
-	}, 4000);
-}
-getAlertClose.addEventListener('click', (e) => {
-	e.target.parentElement.classList.add('d-none');
+
+getNotif.addEventListener('click', (e) => {
+	getNotif.className = 'alert d-none';
 });
