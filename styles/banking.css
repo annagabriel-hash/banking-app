@@ -10,6 +10,7 @@
 	||	 ..Form       	         	||       
 	||	 ..Button: pill	         	||       
 	||   ..Modal       	        	||       
+	||   ..Alert      	        	||       
   ||  E. Layout/Utilities       ||  
 	||   ..Display        		    ||
 	||   ..Flex: *row     		    ||
@@ -181,7 +182,7 @@ input:active {
 .btn {
 	background-color: rgb(235, 51, 73);
 	/* width | styles | color */
-	border: 1px solid transparent;
+	border: 2px solid transparent;
 	border-radius: 16px;
 	cursor: pointer;
 	display: inline-block;
@@ -200,7 +201,7 @@ input:active {
 .text-white.btn:focus {
 	background-color: whitesmoke;
 	color: rgb(235, 51, 73);
-	border: 1.8px solid rgb(235, 51, 73);
+	border: 2px solid rgb(235, 51, 73);
 	font-weight: 600;
 }
 /* || ...Circle Button */
@@ -233,6 +234,42 @@ input:active {
 	transform: translate(-50%, -50%);
 	width: 80vmin;
 	z-index: 2;
+}
+/* || Alert */
+.alert {
+	padding: 20px 40px;
+	min-width: 360px;
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 6px;
+}
+.alert-success {
+	color: #155724;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+}
+.alert-success:before {
+	content: 'Success: ';
+	font-weight: 700;
+}
+.alert-warning {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+}
+.alert-warning:before {
+	content: 'Warning: ';
+	font-weight: 700;
+}
+.alert-close {
+	padding: 20px 15px;
+	position: absolute;
+	right: 0px;
+	top: 0;
+	text-align: center;
+	cursor: pointer;
 }
 /* || E. LAYOUT/UTILITIES */
 /* || ...Display */
@@ -401,6 +438,44 @@ div.nav-items {
 .btn-bill-add {
 	position: relative;
 	top: 15px;
+}
+/* Section 7: Bank Statement */
+#bankStmntForm {
+	max-width: 400px;
+}
+.search-bar input {
+	border: 2px solid rgb(235, 51, 73);
+}
+.search-btn {
+	height: 40px;
+	width: 50px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0;
+	border-radius: 4px;
+}
+#btn-acct-no {
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+#newAcctNoForm > input {
+	padding: 0;
+	border-radius: 0;
+}
+/* Set alignment of amounts */
+#tblBnkStatement > tbody > tr > td:nth-child(3) {
+	text-align: right;
+	padding-right: 10px;
+}
+/* Section 9: Account Holders */
+.btn-action {
+	cursor: pointer;
+	padding: 0 5px;
+}
+.btn-action:hover,
+.btn-action:focus {
+	color: rgb(235, 51, 73);
 }
 /* || G. FOR JAVASCRIPT */
 .d-none {
