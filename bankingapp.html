@@ -19,18 +19,18 @@
 			<i class="fas fa-piggy-bank fa-5x text-primary d-block"></i>
 			<h1 class="text-primary">myBank</h1>
 			<h2 class="text-primary mt-2">Log In</h2>
-			<form action="" method="POST">
+			<form action="#" method="POST" id="loginForm">
 				<fieldset>
 					<div class="form-grp">
 						<label for="login-user">Username*</label>
-						<input type="text" name="login-user" id="login-user" required />
+						<input type="text" name="username" id="login-user" minlength="5" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
 						<small>Error message</small>
 					</div>
 					<div class="form-grp">
 						<label for="login-password">Password*</label>
-						<input type="password" name="login-pwd" id="login-pwd" required />
+						<input type="password" name="password" id="login-pwd" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
 						<small>Error message</small>
@@ -49,12 +49,12 @@
 				<h2 class="text-primary">Sign Up</h2>
 				<p>Please fill in this form to create an new user.</p>
 				<hr />
-				<form action="" id="newusr-frm" method="POST">
+				<form action="" id="newUserForm" method="POST">
 					<fieldset class="mt-1 tab-newusr">
 						<legend>Bank Information</legend>
 						<div class="form-grp">
 							<label for="newusr-acctno">Account Number</label>
-							<input type="number" name="newusr-acctno" id="newusr-acctno" placeholder="123456789000" />
+							<input type="number" name="acctno" id="acctno" placeholder="123456789000" maxlength="12" minlength="12" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
@@ -64,14 +64,14 @@
 						<legend>Basic Information</legend>
 						<div class="form-grp">
 							<label for="newusr-firstname">First Name</label>
-							<input type="text" id="newusr-firstname" name="firstname" placeholder="Enter first name" />
+							<input type="text" name="firstname" id="newusr-firstname" placeholder="Enter first name" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
 						</div>
 						<div class="form-grp">
 							<label for="newusr-lastname">Last Name</label>
-							<input type="text" id="newusr-lastname" name="lastname" placeholder="Enter last name" />
+							<input type="text" name="lastname" id="newusr-lastname" placeholder="Enter last name" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
@@ -81,7 +81,7 @@
 						<legend>Contact Details</legend>
 						<div class="form-grp">
 							<label for="newusr-email">Email</label>
-							<input type="email" id="newusr-email" name="email" placeholder="Enter email address" />
+							<input type="email" id="newusr-email" name="email" placeholder="Enter email address" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
@@ -91,29 +91,29 @@
 						<legend>Login Details</legend>
 						<div class="form-grp">
 							<label for="newusr-username">User Name</label>
-							<input type="text" id="newusr-username" name="newusr-username" placeholder="Enter username" />
+							<input type="text" id="newusr-username" name="username" placeholder="Enter username" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
 						</div>
 						<div class="form-grp">
 							<label for="newusr-password">Password</label>
-							<input type="password" id="newusr-password" name="newusr-password" placeholder="Enter password" />
+							<input type="password" id="newusr-password" name="password" placeholder="Enter password" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
 						</div>
 						<div class="form-grp">
 							<label for="newusr-chkpassword">Confirm Password</label>
-							<input type="password" name="newusr-chkpassword" id="newusr-chkpassword" placeholder="Re-enter password" />
+							<input type="password" id="newusr-chkpassword" name="chkpassword" placeholder="Re-enter password" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small>Error message</small>
 						</div>
 					</fieldset>
 					<div class="btn-grp text-center mt-2">
-						<button class="btn text-white d-none" id="prevBtn">Prev</button>
-						<button class="btn text-white d-none" id="nextBtn">Next</button>
+						<button type="button" class="btn text-white d-none" id="prevBtn">Prev</button>
+						<button type="button" class="btn text-white d-none" id="nextBtn">Next</button>
 						<button type="submit" class="btn text-white d-none" id="btn-signup">Sign Up</button>
 					</div>
 				</form>
