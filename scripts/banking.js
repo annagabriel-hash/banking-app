@@ -9,6 +9,7 @@
 /* ************************************
  ** 	     	 VARIABLES
  *************************************** */
+
 let activeUser = 'default'; // To check what type of user is using the web
 let userObj; // To store userinformation upon log in
 const bankAccounts = [];
@@ -19,32 +20,306 @@ const userTypes = {
 	sysad: 'System Administrator',
 };
 let currentTab = 0; // To set what tabs to view in the Sign up page
+const FORM = {
+	init() {
+		FORM.addListeners();
+		FORM.addListeners2();
+	},
+	addListeners() {
+		let form = document.forms['loginForm'];
+		let username = form.elements['username'];
+		let password = form.elements['password'];
+		let signUpLink = document.querySelector('#signup-link');
+		// While typing
+		username.addEventListener('input', FORM.formatStr);
+
+		// When there is an error during validation
+		username.addEventListener('invalid', FORM.fail);
+		password.addEventListener('invalid', FORM.fail);
+
+		// When the form gets submitted
+		form.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 2. Reset form
+				form.reset();
+				// 3. Load initial data
+			}
+		});
+		// For new users
+		signUpLink.addEventListener('click', () => {
+			// 1. Show sign up page
+			let getSignUpPage = document.querySelector('.sec-newusr');
+			getSignUpPage.classList.remove('d-none');
+			// 2. View first tab
+			FORM.showTab(currentTab);
+		});
+	},
+	addListeners2() {
+		let form = document.forms['newUserForm'];
+		let inputElems = form.querySelectorAll('input');
+		let acctNo = form.elements['acctno'];
+		let firstname = form.elements['firstname'];
+		let lastname = form.elements['lastname'];
+		let newUsername = form.elements['username'];
+		let chkpassword = form.elements['chkpassword'];
+		// While typing
+		// Checks if inputted value is a character
+		firstname.addEventListener('keypress', FORM.testStr);
+		lastname.addEventListener('keypress', FORM.testStr);
+		// Converts inputted character to uppercase
+		firstname.addEventListener('input', FORM.formatStr);
+		lastname.addEventListener('input', FORM.formatStr);
+
+		// After changing the whole value
+		inputElems.forEach((inputElem) => inputElem.addEventListener('change', FORM.validateInputs(inputElem)));
+		acctNo.addEventListener('change', FORM.testAcctNum);
+		newUsername.addEventListener('change', FORM.testNewUsr);
+		chkpassword.addEventListener('change', FORM.testNewPassword);
+
+		// When there is an error during validation
+		inputElems.forEach((inputElem) => inputElem.addEventListener('invalid', FORM.fail));
+		// || Section 2: New User
+		getPrevBtn.addEventListener('click', (e) => {
+			getNewUsrTabs[currentTab].classList.add('d-none');
+			currentTab--;
+			FORM.showTab(currentTab);
+		});
+		getNextBtn.addEventListener('click', (e) => {
+			// Validate data
+			let currentInputs = getNewUsrTabs[currentTab].querySelectorAll('input');
+			console.log(currentInputs);
+			let isFieldValid;
+			currentInputs.forEach((element) => {
+				FORM.validateInputs(element);
+				isFieldValid = element.checkValidity();
+				if (!isFieldValid) {
+					return;
+				}
+			});
+			if (isFieldValid) {
+				getNewUsrTabs[currentTab].classList.add('d-none');
+				currentTab++;
+				FORM.showTab(currentTab);
+			}
+		});
+		// When the form gets submitted
+		form.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 1. Create new user
+				FORM.createNewUser(ev);
+				// 2. Reset form
+				form.reset();
+				// 3. Load initial data
+				loadDashboard();
+			}
+		});
+	},
+	formatStr(ev) {
+		let field = ev.target;
+		field.value = field.value.toUpperCase().trim();
+	},
+	fail(ev) {
+		let field = ev.target;
+		// The invalid event fired
+		setErrorMsg(field, field.validationMessage);
+	},
+	testStr(ev) {
+		let field = ev.target;
+		let char = parseInt(ev.key);
+		// 1. Reset custom errors
+		field.setCustomValidity('');
+		// Character inputted is not number
+		if (Number.isNaN(char)) {
+			field.setCustomValidity('Please enter a letter.');
+			// Validate input and show message
+			field.checkValidity();
+		}
+	},
+	testAcctNum(ev) {
+		let field = ev.target;
+		let accountHolder = searchAcctHolder(field.value);
+		field.setCustomValidity('');
+		// Account Number is not existing
+		!accountHolder && field.setCustomValidity('Account Number not valid');
+	},
+	testNewUser(ev) {
+		let field = ev.target;
+		let username = searchUser(getUsername.value);
+		field.setCustomValidity('');
+		// New Username is existing
+		username && field.setCustomValidity('Username already exist. Please input other username.');
+	},
+	testNewPassword(ev) {
+		let field = ev.target;
+		let password = document.forms['newUserForm'].elements['password'];
+		field.setCustomValidity('');
+		password.setCustomValidity('');
+		// 2c. Re-entered password does not match
+		if (field.value !== password.value) {
+			field.setCustomValidity('Password does not match');
+			password.setCustomValidity('Password does not match');
+		}
+	},
+	testLogin(ev) {
+		let username = this.elements['username'];
+		let password = this.elements['password'];
+		// 1. Reset custom errors
+		username.setCustomValidity('');
+		password.setCustomValidity('');
+		// 2. Check validity checks the element's value against the constraints (HTML rules)
+		let isUsrValid = username.checkValidity();
+		let isPwdValid = password.checkValidity();
+		if (isUsrValid && isPwdValid) {
+			try {
+				// Find existing user in the user list
+				let loginUsr = searchUser(username.value);
+				// User is not existing
+				if (!loginUsr) throw 'Incorrect username or password';
+				// Password is incorrect
+				if (loginUsr.password !== password.value) throw 'Incorrect username or password';
+				// User and password is correct
+				// Store user information
+				userObj = searchUser(username.value);
+			} catch (err) {
+				username.setCustomValidity(err);
+				password.setCustomValidity(err);
+			}
+		}
+	},
+	testSignUp(ev) {
+		let inputElems = this.querySelector('input');
+		let getAccountNum = this.elements['acctno'];
+		let getUsername = this.elements['username'];
+		let getPassword = this.elements['password'];
+		let getChkpassword = this.elements['chkpassword'];
+
+		let accountHolder = searchAcctHolder(getAccountNum.value);
+		let username = searchUser(getUsername.value);
+		let isFieldValid;
+
+		// 1. Check validity checks the element's value against the constraints (HTML rules)
+		inputElems.forEach((element) => {
+			isFieldValue = element.checkValidity();
+			if (!isFieldValid) {
+				return;
+			}
+		});
+		// 2. Set custom errors
+		if (isFieldValid) {
+			// Errors:
+			// 2a. Account Number is not existing
+			!accountHolder && field.setCustomValidity('Account Number not valid');
+			// 2b. New Username is existing
+			username && field.setCustomValidity('Username already exist. Please input other username.');
+			// 2c. Re-entered password does not match
+			if (getChkpassword.value !== chkpassword) {
+				getChkpassword.setCustomValidity('Password does not match');
+				getPassword.setCustomValidity('Password does not match');
+			}
+		}
+	},
+	// This is to run the success message, for alert messages it is already included in the invalid event listener
+	validateInputs(inputElem) {
+		// Check if input value has passed constraints
+		let isValid = inputElem.checkValidity();
+		isValid && setSuccessMsg(inputElem);
+	},
+	validateForm(ev) {
+		let form = ev.target;
+		let inputElems = form.querySelectorAll('input');
+		ev.preventDefault();
+		// 1. Check if username and password are valid
+		// Binds the function such that when running func testLogin, this refers to the form
+		form.id === 'loginForm' && FORM.testLogin.bind(form)();
+		form.id === 'newUserForm' && FORM.testSignUp.bind(form)();
+		// 2. Validate input elements and show message
+		inputElems.forEach((inputElem) => FORM.validateInputs(inputElem));
+		return form.checkValidity();
+	},
+	loadLoginDetails() {
+		// 1. Search and store user information
+		activeUser = userObj.userType;
+		bankAccount = searchAcctHolder(userObj.bankNum);
+		// 2. Display account balance, account number and account name
+		if (activeUser === 'bankmgr') {
+			// User is a bank manager
+			dispAcctBalance(userObj.username);
+			document.querySelector('#acct-no').parentElement.innerHTML = `Branch: <em id="acct-no">MAIN BRANCH</em>`;
+			document.querySelector('#acct-name').parentElement.innerHTML = `Bank Manager: <em id="acct-name">${userObj.completeName}</em>`;
+		} else if (activeUser === 'admin') {
+		} else {
+			// User is an account holder
+			document.querySelectorAll('.acct-bal')[0].textContent = formatNum(bankAccount.balance);
+			document.querySelector('#acct-no').textContent = bankAccount.acctNo;
+			document.querySelector('#acct-name').textContent = bankAccount.completeName;
+		}
+		// 3. Hide login page
+		document.querySelector('.sec-log').classList.add('d-none');
+		// 4. Show main page
+		document.querySelector('main').classList.remove('d-none');
+		// 5. Hide view of bank manager;
+		if (activeUser === 'default') {
+			const getBnkMgrView = document.querySelectorAll('.view-bankmgr');
+			getBnkMgrView.forEach((element) => {
+				element.classList.add('d-none');
+			});
+		} else {
+			const getUserView = document.querySelectorAll('.view-default');
+			getUserView.forEach((element) => {
+				element.classList.add('d-none');
+			});
+		}
+	},
+	showTab(n) {
+		getNewUsrTabs[n].classList.remove('d-none');
+		// Starting page
+		if (n === 0) {
+			getPrevBtn.classList.add('d-none');
+			getNextBtn.classList.remove('d-none');
+		} else if (n === getNewUsrTabs.length - 1) {
+			// End page
+			getNextBtn.classList.add('d-none');
+			getSignUpBtn.classList.remove('d-none');
+		} else {
+			// Middle page
+			getPrevBtn.classList.remove('d-none');
+			getNextBtn.classList.remove('d-none');
+			getSignUpBtn.classList.add('d-none');
+		}
+	},
+	createNewUser(ev) {
+		let form = ev.target;
+		let inputElems = form.querySelectorAll('input');
+		// 1. Store form values to object
+		let { acctno, firstname, lastname, email, username, password } = storeFormData(form);
+		// 2. Create new user
+		createUser(username, firstname, lastname, email, password, 'default', acctno);
+	},
+	loadDashboard() {
+		const getSignUpPage = document.querySelector('.sec-newusr');
+		getSignUpPage.classList.add('d-none');
+	},
+};
+window.addEventListener('DOMContentLoaded', FORM.init);
 /* ====================
 			DOM elements
 ==================== */
 // || Multiple Sections
 const getActionTabs = document.querySelectorAll('.tab');
-const getResetBtns = document.querySelectorAll('button[type="reset"]');
 const getSubmitBtns = document.querySelectorAll('button[type="submit"]');
 const getNavItems = document.querySelectorAll('.nav-items');
 const getInputAcctNos = document.querySelectorAll('.validateAcctNo');
-const getInputAmts = document.querySelectorAll('.validateAmts');
-// || Section 1: Login Page
-const getLoginUser = document.querySelector('#login-user');
-const getLoginPwd = document.querySelector('#login-pwd');
-const getSignUpLink = document.querySelector('#signup-link');
 const getNewUsrTabs = document.querySelectorAll('.tab-newusr');
 // || Section 2: Sign Up Page
 const getPrevBtn = document.querySelector('#prevBtn');
 const getNextBtn = document.querySelector('#nextBtn');
 const getSignUpBtn = document.querySelector('#btn-signup');
-const getInputAcctNo = document.querySelector('#newusr-acctno');
-const getInputfirstName = document.querySelector('#newusr-firstname');
-const getInputlastName = document.querySelector('#newusr-lastname');
-const getInputUser = document.querySelector('#newusr-username');
-const getInputEmail = document.querySelector('#newusr-email');
-const getInputPwd = document.querySelector('#newusr-password');
-const getInputPwd2 = document.querySelector('#newusr-chkpassword');
 // || Section 3: Dashboard
 const getNavItemsAcct = document.querySelector('.view-default .nav-items');
 const getAcctNo = document.querySelector('#acct-no');
@@ -62,7 +337,7 @@ const getAlertClose = document.querySelector('.alert-close');
 /* ************************************
  ** 	     	 FUNCTIONS
  *************************************** */
-// Formats number to Php format (e.g., 200 => Php 200.00)
+//Formats number to Php format (e.g., 200 => Php 200.00)
 function formatNum(num) {
 	let formatNum = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -71,6 +346,7 @@ function formatNum(num) {
 	}).format(num);
 	return formatNum;
 }
+
 // Generates random integer from one value to another
 function getRandom(min, max) {
 	return Math.floor(Math.random() * (max - min) + min);
@@ -80,9 +356,10 @@ function getRandom(min, max) {
 function storeFormData(formElem) {
 	let formData = {};
 	// 1. Find input elements
-	let getInputs = [].filter.call(getNewAcctHolder.elements, (el) => el.nodeName === 'INPUT');
-	// 2. Store data in the object. If there is no name, it will not store the data;
 	// Use call function since forEach is not available for HTML Collection
+	let getInputs = [].filter.call(formElem.elements, (el) => el.nodeName === 'INPUT');
+	// 2. Store data in the object. If there is no name, it will not store the data;
+	// Utilizes the input name and value attributes to get the name and value
 	getInputs.forEach(({ name, value }) => name && (formData[name] = value));
 	return formData;
 }
@@ -104,68 +381,6 @@ function setSuccessMsg(getInput) {
 	getFormGrp.classList.add('success');
 	getFormGrp.classList.remove('error');
 }
-/*
- ** Validates login inputs
- ** Return   : boolean (true = valid login inputs)  */
-function isLoggedIn() {
-	// 1. Get login input values
-	let loginUser = getLoginUser.value;
-	let loginPwd = getLoginPwd.value;
-	// 2. Check blank values
-	// 3. Check if user is existing or password is correct
-	let userObj = searchUser(loginUser);
-	if (!userObj || userObj.password !== loginPwd) {
-		if (loginUser === '' || loginPwd === '') {
-			loginUser === '' && setErrorMsg(getLoginUser, 'Username cannot be blank');
-			loginPwd === '' && setErrorMsg(getLoginPwd, 'Password cannot be blank');
-		} else {
-			// Show error
-			setErrorMsg(getLoginUser, 'Incorrect username or password');
-			setErrorMsg(getLoginPwd, 'Incorrect username or password');
-		}
-		return false;
-	} else {
-		// 4. Show Notificaton
-		showNotif('Login successful', 'success');
-		setSuccessMsg(getLoginUser);
-		setSuccessMsg(getLoginPwd);
-		return true;
-	}
-}
-function validateSignUp(inputElements) {
-	let isValid = true;
-	inputElements.forEach((element) => {
-		if (element.value === '') {
-			let label = element.parentElement.firstElementChild.textContent;
-			setErrorMsg(element, `${label} cannot be blank`);
-			isValid = false;
-		} else {
-			setSuccessMsg(element);
-		}
-	});
-	return isValid;
-}
-/*
- ** Description  : Shows tabs in the signup page
- ** Return       :   */
-function showTab(n) {
-	getNewUsrTabs[n].classList.remove('d-none');
-	// Starting page
-	if (n === 0) {
-		getPrevBtn.classList.add('d-none');
-		getNextBtn.classList.remove('d-none');
-	} else if (n === getNewUsrTabs.length - 1) {
-		// End page
-		getNextBtn.classList.add('d-none');
-		getSignUpBtn.classList.remove('d-none');
-	} else {
-		// Middle page
-		getPrevBtn.classList.remove('d-none');
-		getNextBtn.classList.remove('d-none');
-		getSignUpBtn.classList.add('d-none');
-	}
-}
-
 /*
  ** Clears input values
  ** Parameters : DOM elements */
@@ -246,28 +461,16 @@ function dispUsers() {
  ** Parameters   : Account number (number)
  ** Return       : Bank account object */
 function searchAcctHolder(acctNo) {
-	try {
-		// Account Holder found
-		let acctHolder = bankAccounts.find((BankAccount) => BankAccount.acctNo === acctNo);
-		return acctHolder;
-	} catch (error) {
-		// Account Holder not found
-		console.log('Account number not found');
-	}
+	let acctHolder = bankAccounts.find((BankAccount) => BankAccount.acctNo === acctNo);
+	return acctHolder;
 }
 /*
  ** Description  : Search user
  ** Parameters   : Username (string)
  ** Return       : User object */
 function searchUser(username) {
-	try {
-		// Account Holder found
-		let user = users.find((User) => User.username === username);
-		return user;
-	} catch (error) {
-		// Account Holder not found
-		console.log('User not found');
-	}
+	let user = users.find((User) => User.username === username);
+	return user;
 }
 /*
  ** Description : Deposits amount
@@ -343,16 +546,6 @@ function checkBalance(bankNum) {
 	// 2. Return balance
 	return formatNum(bankAccount.balance);
 }
-/*
- ** Description  : Check balance of all bankaccount
- ** Parameters   : bankAccount(string)
- ** Returns      : Updated balance
- */
-function checkBalances() {
-	bankAccounts;
-	// 2. Return balance
-	return formatNum(bankAccount.balance);
-}
 /** Description  : Display account holders */
 function dispAcctHolder() {
 	// 1. Display in console
@@ -404,30 +597,24 @@ function dispbankStatements() {
 	// Append to html table
 	getTable.appendChild(newTBody);
 }
+function getBalance() {
+	let isAccountHolder = userObj.bankNum;
+	let balance = 0;
+	if (isAccountHolder) {
+		// Not an account holder
+		let accountHolder = searchAcctHolder(isAccountHolder);
+		balance = accountHolder.balance;
+	} else {
+		// returns balance of all bank holders
+		balance = bankAccounts.reduce((acc, obj) => acc + obj.balance, 0);
+	}
+	return balance;
+}
 /*
  ** Function  : Display account balance */
 function dispAcctBalance(username) {
-	// 1. Display in console
-	console.table(bankAccounts);
-	// 2. Display account balance in HTML
 	let getAcctBal = document.querySelector('.acct-bal');
-	let acctBal = 0;
-	// 3. Search username balance
-	if (userObj.userType === 'default') {
-		let accountHolder = searchAcctHolder(userObj.bankNum);
-		acctBal = accountHolder.balance;
-	} else {
-		acctBal = getBalanceofAll();
-	}
-	getAcctBal.textContent = formatNum(acctBal);
-}
-// getBalance of all users
-function getBalanceofAll() {
-	let balance = 0;
-	bankAccounts.forEach((bankAccount) => {
-		balance += bankAccount.balance;
-	});
-	return balance;
+	getAcctBal.textContent = formatNum(getBalance());
 }
 // Creates alert notifications
 function showNotif(message, type) {
@@ -503,150 +690,7 @@ let loadAccounts = JSON.parse(localStorage.getItem('bankAccounts'));
 bankAccounts.push(...loadAccounts);
 let loadUsers = JSON.parse(localStorage.getItem('users'));
 users.push(...loadUsers);
-// Input Validations
-getInputAcctNos.forEach((inputElem) => {
-	inputElem.addEventListener('change', () => {
-		// Check if account number is existing
-		if (!searchAcctHolder(inputElem.value)) {
-			setErrorMsg(inputElem, 'Account Number not existing');
-		}
-	});
-});
-// || Section 1: Login Page
-// || This will run once the user inputs username ***/
-getLoginUser.addEventListener('change', () => {
-	// 1. Get login user value
-	let loginUser = getLoginUser.value;
-	// 2. Change to uppercase and remove leading spaces
-	getLoginUser.value = loginUser.toUpperCase().trim();
-});
-// || This resets the login input
-getResetBtns[0].addEventListener('click', () => {
-	getLoginUser.parentElement.classList.remove('error', 'success');
-	getLoginPwd.parentElement.classList.remove('error', 'success');
-});
-// || This will run once the user logins
-getSubmitBtns[0].addEventListener('click', (e) => {
-	// 1. Prevent submitting of form (default behavior)
-	e.preventDefault();
-	// 2. Validate user and password input
-	if (isLoggedIn()) {
-		// UPON SUCCESSFUL LOGIN
-		// 3. Search for user and stores user information
-		userObj = searchUser(getLoginUser.value);
-		console.log(userObj);
-		// 4. Set usertype
-		activeUser = userObj.userType;
-		// 5. Display account balance, account number and account name
-		if (activeUser === 'bankmgr') {
-			dispAcctBalance(userObj.username);
-			document.querySelector('#acct-no').parentElement.innerHTML = `Branch: <em id="acct-no">MAIN BRANCH</em>`;
-			document.querySelector('#acct-name').parentElement.innerHTML = `Bank Manager: <em id="acct-name">${userObj.completeName}</em>`;
-		} else if (activeUser === 'admin') {
-		} else {
-			// User is an account holder
-			// 1. Search for bankaccount information
-			let bankAccount = searchAcctHolder(userObj.bankNum);
-			console.log(bankAccount);
-			document.querySelectorAll('.acct-bal')[0].textContent = formatNum(bankAccount.balance);
-			document.querySelector('#acct-no').textContent = bankAccount.acctNo;
-			document.querySelector('#acct-name').textContent = bankAccount.completeName;
-		}
-		// 5. Reset login page
-		getLoginUser.value = '';
-		getLoginPwd.value = '';
-		// 6. Hide login page
-		document.querySelector('.sec-log').classList.add('d-none');
-		// 7. Show main page
-		document.querySelector('main').classList.remove('d-none');
-		// 8. Hide view of bank manager;
-		if (activeUser === 'default') {
-			const getBnkMgrView = document.querySelectorAll('.view-bankmgr');
-			getBnkMgrView.forEach((element) => {
-				element.classList.add('d-none');
-			});
-		} else {
-			const getUserView = document.querySelectorAll('.view-default');
-			getUserView.forEach((element) => {
-				element.classList.add('d-none');
-			});
-		}
-	}
-});
-getSignUpLink.addEventListener('click', () => {
-	// Show sign up page
-	const getSignUpPage = document.querySelector('.sec-newusr');
-	getSignUpPage.classList.remove('d-none');
-	// View first tab
-	showTab(currentTab);
-});
-// || Section 2: New User
-getPrevBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	getNewUsrTabs[currentTab].classList.add('d-none');
-	currentTab--;
-	showTab(currentTab);
-});
-getNextBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	// Validate data
-	let getInputValues = getNewUsrTabs[currentTab].querySelectorAll('input');
-	if (validateSignUp(getInputValues)) {
-		getNewUsrTabs[currentTab].classList.add('d-none');
-		currentTab++;
-		showTab(currentTab);
-	}
-});
-getInputAcctNo.addEventListener('change', () => {
-	// Account Number not existing
-	if (!searchAcctHolder(getInputAcctNo.value)) {
-		setErrorMsg(getInputAcctNo, 'Invalid account number');
-	} else {
-		setSuccessMsg(getInputAcctNo);
-	}
-});
-getInputfirstName.addEventListener('change', () => {
-	// 1. Get value
-	let inputFirstName = getInputfirstName.value;
-	// 2. Change to uppercase and remove leading spaces
-	getInputfirstName.value = inputFirstName.toUpperCase().trim();
-});
-getInputlastName.addEventListener('change', () => {
-	// 1. Get value
-	let inputLastName = getInputlastName.value;
-	// 2. Change to uppercase and remove leading spaces
-	getInputlastName.value = inputLastName.toUpperCase().trim();
-});
-getInputUser.addEventListener('change', () => {
-	// 1. Get value
-	let inputUser = getInputUser.value;
-	// 2. Change to uppercase and remove leading spaces
-	getInputUser.value = inputUser.toUpperCase().trim();
-	inputUser = getInputUser.value;
-	if (searchUser(inputUser)) {
-		setErrorMsg(getInputUser, 'Username already existing');
-	} else {
-		setSuccessMsg(getInputUser);
-	}
-});
-getSignUpBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	let getInputValues = getNewUsrTabs[currentTab].querySelectorAll('input');
-	if (validateSignUp(getInputValues)) {
-		if (getInputPwd.value !== getInputPwd2.value) {
-			setErrorMsg(getInputPwd, 'Password does not match');
-			setErrorMsg(getInputPwd2, 'Password does not match');
-		} else {
-			// Create new user
-			createUser(getInputUser.value, getInputfirstName.value, getInputlastName.value, getInputEmail.value, getInputPwd.value, 'default', getInputAcctNo.value);
-			// Hide sign up page
-			const getSignUpPage = document.querySelector('.sec-newusr');
-			getSignUpPage.classList.add('d-none');
-			alert('New user created');
-			//
-		}
-	}
-});
+
 // || Navigation Bar
 getNavItems.forEach((navItem) => {
 	navItem.addEventListener('click', (e) => {
