@@ -168,7 +168,6 @@ input {
 	background-color: #fff;
 	background-clip: padding-box;
 	border: 2px solid #ced4da;
-	border-radius: 0.25rem;
 }
 input:focus,
 input:active {
@@ -225,7 +224,7 @@ input:active {
 }
 .modal-content {
 	background-color: white;
-	border-radius: 8px;
+	border-radius: 6px;
 	box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
 	padding: 15px;
 	position: absolute;
@@ -334,7 +333,7 @@ input:active {
 #signup-link {
 	cursor: pointer;
 }
-#newusr-frm {
+#newUserForm {
 	display: flex;
 	flex-direction: column;
 	height: 350px;
