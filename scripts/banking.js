@@ -11,7 +11,7 @@
  *************************************** */
 
 let activeUser = 'default'; // To check what type of user is using the web
-let userObj; // To store userinformation upon log in
+let userObj; // To store userinformatsion upon log in
 const bankAccounts = [];
 const users = [];
 const userTypes = {
@@ -20,10 +20,17 @@ const userTypes = {
 	sysad: 'System Administrator',
 };
 let currentTab = 0; // To set what tabs to view in the Sign up page
+let currentCard = 0;
+let editBudgetIndex;
 const FORM = {
 	init() {
 		FORM.addListeners();
 		FORM.addListeners2();
+		FORM.cashInForm();
+		FORM.transferForm();
+		FORM.withdrawForm();
+		FORM.payBillsForm();
+		FORM.budgetForms();
 	},
 	addListeners() {
 		let form = document.forms['loginForm'];
@@ -45,16 +52,20 @@ const FORM = {
 			if (isValid) {
 				// 2. Reset form
 				form.reset();
-				// 3. Load initial data
+				// 3. Hide login
+				document.querySelector('#sec-login').classList.add('d-none');
+				// 4. Load initial data
+				FORM.loadLoginDetails();
+				// 5. Show dashboard and navbar
+				FORM.loadDashboard();
 			}
 		});
 		// For new users
 		signUpLink.addEventListener('click', () => {
 			// 1. Show sign up page
-			let getSignUpPage = document.querySelector('.sec-newusr');
+			let getSignUpPage = document.querySelector('#sec-newusr');
 			getSignUpPage.classList.remove('d-none');
-			// 2. View first tab
-			FORM.showTab(currentTab);
+			getPrevBtn.style.visibility = 'hidden';
 		});
 	},
 	addListeners2() {
@@ -67,16 +78,20 @@ const FORM = {
 		let chkpassword = form.elements['chkpassword'];
 		// While typing
 		// Checks if inputted value is a character
-		firstname.addEventListener('keypress', FORM.testStr);
-		lastname.addEventListener('keypress', FORM.testStr);
-		// Converts inputted character to uppercase
-		firstname.addEventListener('input', FORM.formatStr);
-		lastname.addEventListener('input', FORM.formatStr);
+		// firstname.addEventListener('keypress', FORM.testStr);
+		// lastname.addEventListener('keypress', FORM.testStr);
 
 		// After changing the whole value
+		firstname.addEventListener('change', FORM.formatStr);
+		lastname.addEventListener('change', FORM.formatStr);
+
 		inputElems.forEach((inputElem) => inputElem.addEventListener('change', FORM.validateInputs(inputElem)));
 		acctNo.addEventListener('change', FORM.testAcctNum);
-		newUsername.addEventListener('change', FORM.testNewUsr);
+		newUsername.addEventListener('change', (ev) => {
+			console.log('changed');
+			FORM.formatStr(ev);
+			FORM.testNewUser(ev);
+		});
 		chkpassword.addEventListener('change', FORM.testNewPassword);
 
 		// When there is an error during validation
@@ -115,9 +130,158 @@ const FORM = {
 				FORM.createNewUser(ev);
 				// 2. Reset form
 				form.reset();
-				// 3. Load initial data
-				loadDashboard();
+				// 3. Hide Sign up Page
+				const getSignUpPage = document.querySelector('#sec-newusr');
+				getSignUpPage.classList.add('d-none');
 			}
+		});
+	},
+	cashInForm() {
+		let cashInForm = document.forms['cashInForm'];
+		let amt = cashInForm.elements['amt'];
+		amt.addEventListener('input', () => FORM.validateInputs(amt));
+		// When input is invalid
+		amt.addEventListener('invalid', FORM.fail);
+		cashInForm.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let form = ev.target;
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 2. Get Form Data
+				let { amt } = storeFormData(form);
+				let acctNum = userObj.bankNum;
+				amt = parseFloat(amt);
+				deposit(acctNum, amt);
+				// Display new balance
+				dispAcctBalance();
+				// . Reset form
+				form.reset();
+				resetMsg(amt);
+			}
+		});
+	},
+	withdrawForm() {
+		let withdrawForm = document.forms['withdrawForm'];
+		let amt = withdrawForm.elements['amt'];
+		amt.addEventListener('input', () => FORM.validateInputs(amt));
+		// When input is invalid
+		amt.addEventListener('invalid', FORM.fail);
+		withdrawForm.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let form = ev.target;
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 2. Get Form Data
+				let { amt } = storeFormData(form);
+				let acctNum = userObj.bankNum;
+				amt = parseFloat(amt);
+				withdraw(acctNum, amt);
+				// Display new balance
+				dispAcctBalance();
+				// . Reset form
+				form.reset();
+				resetMsg(amt);
+			}
+		});
+	},
+	transferForm() {
+		let transferForm = document.forms['transferForm'];
+		let inputAcctNo = transferForm.elements['acctNo'];
+		let inputAmt = transferForm.elements['amt'];
+		// While typing
+		inputAmt.addEventListener('input', () => FORM.validateInputs(inputAmt));
+		inputAcctNo.addEventListener('change', (ev) => {
+			FORM.testAcctNum(ev);
+			FORM.validateInputs(inputAcctNo);
+		});
+		// When input is invalid
+		inputAmt.addEventListener('invalid', FORM.fail);
+		inputAcctNo.addEventListener('invalid', FORM.fail);
+		transferForm.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let form = ev.target;
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 2. Get Form Data
+				let { acctNo, amt } = storeFormData(form);
+				let srcAcctNum = userObj.bankNum;
+				amt = parseFloat(amt);
+				sendMoney(srcAcctNum, acctNo, amt);
+				// Display new balance
+				dispAcctBalance();
+				// . Reset form
+				form.reset();
+				resetMsg(inputAcctNo);
+				resetMsg(inputAmt);
+			}
+		});
+	},
+	payBillsForm() {
+		let payBillsForm = document.forms['payBillsForm'];
+		let inputBiller = payBillsForm.elements['biller'];
+		let inputAmt = payBillsForm.elements['amt'];
+		// While typing
+		inputAmt.addEventListener('input', () => FORM.validateInputs(inputAmt));
+		inputBiller.addEventListener('change', () => FORM.validateInputs(inputBiller));
+		// When input is invalid
+		inputAmt.addEventListener('invalid', FORM.fail);
+		inputBiller.addEventListener('invalid', FORM.fail);
+		// Submit Form
+		payBillsForm.addEventListener('submit', (ev) => {
+			// 1. Validate form details
+			let form = ev.target;
+			let isValid = FORM.validateForm(ev);
+			// Form elements are valid
+			if (isValid) {
+				// 2. Get Form Data
+				let { biller, amt } = storeFormData(form);
+				let acctNo = userObj.bankNum;
+				amt = parseFloat(amt);
+				payBill(acctNo, biller, amt);
+				// Display new balance
+				dispAcctBalance();
+				// . Reset form
+				form.reset();
+				resetMsg(inputBiller);
+				resetMsg(inputAmt);
+			}
+		});
+	},
+	budgetForms() {
+		const getSecBudget = document.querySelector('#sec-budget');
+		let forms = getSecBudget.querySelectorAll('form');
+		forms.forEach((form) => {
+			let inputDesc = form.elements['desc'];
+			let inputAmt = form.elements['amt'];
+			// While typing
+			inputAmt.addEventListener('input', () => FORM.validateInputs(inputAmt));
+			inputDesc.addEventListener('change', () => FORM.validateInputs(inputDesc));
+			// When input is invalid
+			inputAmt.addEventListener('invalid', FORM.fail);
+			inputDesc.addEventListener('invalid', FORM.fail);
+			// Submit Form
+			form.addEventListener('submit', (ev) => {
+				// 1. Validate form details
+				let currentForm = ev.target;
+				let isValid = FORM.validateForm(ev);
+				// Form elements are valid
+				if (isValid) {
+					// 2. Get Form Data
+					let { desc, amt } = storeFormData(currentForm);
+					amt = parseFloat(amt);
+					let type = form.id === 'incForm' ? 'income' : 'expense';
+					addBudget(amt, type, desc);
+					// Display new balance
+					dispAcctBalance();
+					// . Reset form
+					currentForm.reset();
+					resetMsg(inputDesc);
+					resetMsg(inputAmt);
+				}
+			});
 		});
 	},
 	formatStr(ev) {
@@ -129,14 +293,26 @@ const FORM = {
 		// The invalid event fired
 		setErrorMsg(field, field.validationMessage);
 	},
-	testStr(ev) {
+	/* testStr(ev) {
+		 let field = ev.target;
+		 let char = parseInt(ev.key);
+		 // 1. Reset custom errors
+		 field.setCustomValidity('');
+		 // Character inputted is not number
+		 if (!Number.isNaN(char)) {
+			 field.setCustomValidity('Please enter a letter.');
+			 // Validate input and show message
+			 field.checkValidity();
+		 }
+	 }, */
+	testIfNum(ev) {
 		let field = ev.target;
 		let char = parseInt(ev.key);
 		// 1. Reset custom errors
 		field.setCustomValidity('');
 		// Character inputted is not number
 		if (Number.isNaN(char)) {
-			field.setCustomValidity('Please enter a letter.');
+			field.setCustomValidity('Please enter a number.');
 			// Validate input and show message
 			field.checkValidity();
 		}
@@ -150,10 +326,12 @@ const FORM = {
 	},
 	testNewUser(ev) {
 		let field = ev.target;
-		let username = searchUser(getUsername.value);
+		let username = searchUser(field.value);
 		field.setCustomValidity('');
 		// New Username is existing
 		username && field.setCustomValidity('Username already exist. Please input other username.');
+		// To immediately show the error
+		FORM.validateInputs(field);
 	},
 	testNewPassword(ev) {
 		let field = ev.target;
@@ -165,6 +343,9 @@ const FORM = {
 			field.setCustomValidity('Password does not match');
 			password.setCustomValidity('Password does not match');
 		}
+		// To immediately validate fields
+		FORM.validateInputs(password);
+		FORM.validateInputs(field);
 	},
 	testLogin(ev) {
 		let username = this.elements['username'];
@@ -192,38 +373,6 @@ const FORM = {
 			}
 		}
 	},
-	testSignUp(ev) {
-		let inputElems = this.querySelector('input');
-		let getAccountNum = this.elements['acctno'];
-		let getUsername = this.elements['username'];
-		let getPassword = this.elements['password'];
-		let getChkpassword = this.elements['chkpassword'];
-
-		let accountHolder = searchAcctHolder(getAccountNum.value);
-		let username = searchUser(getUsername.value);
-		let isFieldValid;
-
-		// 1. Check validity checks the element's value against the constraints (HTML rules)
-		inputElems.forEach((element) => {
-			isFieldValue = element.checkValidity();
-			if (!isFieldValid) {
-				return;
-			}
-		});
-		// 2. Set custom errors
-		if (isFieldValid) {
-			// Errors:
-			// 2a. Account Number is not existing
-			!accountHolder && field.setCustomValidity('Account Number not valid');
-			// 2b. New Username is existing
-			username && field.setCustomValidity('Username already exist. Please input other username.');
-			// 2c. Re-entered password does not match
-			if (getChkpassword.value !== chkpassword) {
-				getChkpassword.setCustomValidity('Password does not match');
-				getPassword.setCustomValidity('Password does not match');
-			}
-		}
-	},
 	// This is to run the success message, for alert messages it is already included in the invalid event listener
 	validateInputs(inputElem) {
 		// Check if input value has passed constraints
@@ -233,11 +382,11 @@ const FORM = {
 	validateForm(ev) {
 		let form = ev.target;
 		let inputElems = form.querySelectorAll('input');
+		console.log(form);
 		ev.preventDefault();
 		// 1. Check if username and password are valid
 		// Binds the function such that when running func testLogin, this refers to the form
 		form.id === 'loginForm' && FORM.testLogin.bind(form)();
-		form.id === 'newUserForm' && FORM.testSignUp.bind(form)();
 		// 2. Validate input elements and show message
 		inputElems.forEach((inputElem) => FORM.validateInputs(inputElem));
 		return form.checkValidity();
@@ -249,38 +398,22 @@ const FORM = {
 		// 2. Display account balance, account number and account name
 		if (activeUser === 'bankmgr') {
 			// User is a bank manager
-			dispAcctBalance(userObj.username);
-			document.querySelector('#acct-no').parentElement.innerHTML = `Branch: <em id="acct-no">MAIN BRANCH</em>`;
-			document.querySelector('#acct-name').parentElement.innerHTML = `Bank Manager: <em id="acct-name">${userObj.completeName}</em>`;
+			/* 			dispAcctBalance(userObj.username);
+			 document.querySelector('#acct-no').parentElement.innerHTML = `Branch: <em id="acct-no">MAIN BRANCH</em>`;
+			 document.querySelector('#acct-name').parentElement.innerHTML = `Bank Manager: <em id="acct-name">${userObj.completeName}</em>`; */
 		} else if (activeUser === 'admin') {
 		} else {
 			// User is an account holder
-			document.querySelectorAll('.acct-bal')[0].textContent = formatNum(bankAccount.balance);
-			document.querySelector('#acct-no').textContent = bankAccount.acctNo;
-			document.querySelector('#acct-name').textContent = bankAccount.completeName;
+			dispAcctBalance();
 		}
-		// 3. Hide login page
-		document.querySelector('.sec-log').classList.add('d-none');
-		// 4. Show main page
-		document.querySelector('main').classList.remove('d-none');
-		// 5. Hide view of bank manager;
-		if (activeUser === 'default') {
-			const getBnkMgrView = document.querySelectorAll('.view-bankmgr');
-			getBnkMgrView.forEach((element) => {
-				element.classList.add('d-none');
-			});
-		} else {
-			const getUserView = document.querySelectorAll('.view-default');
-			getUserView.forEach((element) => {
-				element.classList.add('d-none');
-			});
-		}
+		// 3. Reset current tabs for navbar
+		currentTab = 0;
 	},
 	showTab(n) {
 		getNewUsrTabs[n].classList.remove('d-none');
 		// Starting page
 		if (n === 0) {
-			getPrevBtn.classList.add('d-none');
+			getPrevBtn.style.visibility = 'hidden';
 			getNextBtn.classList.remove('d-none');
 		} else if (n === getNewUsrTabs.length - 1) {
 			// End page
@@ -288,42 +421,71 @@ const FORM = {
 			getSignUpBtn.classList.remove('d-none');
 		} else {
 			// Middle page
-			getPrevBtn.classList.remove('d-none');
+			getPrevBtn.style.visibility = 'visible';
 			getNextBtn.classList.remove('d-none');
 			getSignUpBtn.classList.add('d-none');
 		}
 	},
 	createNewUser(ev) {
 		let form = ev.target;
-		let inputElems = form.querySelectorAll('input');
 		// 1. Store form values to object
 		let { acctno, firstname, lastname, email, username, password } = storeFormData(form);
 		// 2. Create new user
 		createUser(username, firstname, lastname, email, password, 'default', acctno);
 	},
 	loadDashboard() {
-		const getSignUpPage = document.querySelector('.sec-newusr');
-		getSignUpPage.classList.add('d-none');
+		DASHBOARD.showTab(currentTab);
+		const getNavBar = document.querySelector('nav');
+		getNavBar.classList.remove('d-none');
+	},
+};
+
+const DASHBOARD = {
+	init() {
+		DASHBOARD.addEventListener();
+	},
+	addEventListener() {
+		let cards = document.querySelectorAll('.card');
+		let navItems = document.querySelectorAll('.nav-items');
+
+		navItems.forEach((clickedNav) => {
+			clickedNav.addEventListener('click', () => {
+				navItems.forEach((navItem) => navItem.classList.remove('active'));
+				clickedNav.classList.add('active');
+				currentTab = Array.prototype.indexOf.call(navItems, clickedNav);
+				DASHBOARD.showTab(currentTab);
+				currentTab === 2 && dispBudget();
+			});
+		});
+		cards.forEach((clickedCard) => {
+			clickedCard.addEventListener('click', () => {
+				currentCard = Array.prototype.indexOf.call(cards, clickedCard);
+				currentTab = currentCard === 0 ? 1 : 2;
+				DASHBOARD.showTab(currentTab);
+				navItems.forEach((navItem) => navItem.classList.remove('active'));
+				currentTab === 2 && dispBudget();
+				navItems[currentTab].classList.add('active');
+			});
+		});
+	},
+	showTab(n) {
+		let getTabs = document.querySelectorAll('.tab');
+		getTabs.forEach((tab) => (tab.style.display = 'none'));
+		getTabs[currentTab].style.display = 'block';
 	},
 };
 window.addEventListener('DOMContentLoaded', FORM.init);
+window.addEventListener('DOMContentLoaded', DASHBOARD.init);
 /* ====================
-			DOM elements
-==================== */
+				DOM elements
+	==================== */
 // || Multiple Sections
-const getActionTabs = document.querySelectorAll('.tab');
-const getSubmitBtns = document.querySelectorAll('button[type="submit"]');
-const getNavItems = document.querySelectorAll('.nav-items');
 const getInputAcctNos = document.querySelectorAll('.validateAcctNo');
-const getNewUsrTabs = document.querySelectorAll('.tab-newusr');
+const getNewUsrTabs = document.querySelectorAll('#newUserForm > fieldset');
 // || Section 2: Sign Up Page
 const getPrevBtn = document.querySelector('#prevBtn');
 const getNextBtn = document.querySelector('#nextBtn');
 const getSignUpBtn = document.querySelector('#btn-signup');
-// || Section 3: Dashboard
-const getNavItemsAcct = document.querySelector('.view-default .nav-items');
-const getAcctNo = document.querySelector('#acct-no');
-const getAcctName = document.querySelector('#acct-name');
 // || Section 8: Manage Bank Statements
 const getBankStmForm = document.querySelector('#bankStmntForm');
 // || Section 9: Manage Account Holders
@@ -356,7 +518,7 @@ function getRandom(min, max) {
 function storeFormData(formElem) {
 	let formData = {};
 	// 1. Find input elements
-	// Use call function since forEach is not available for HTML Collection
+	// Use call function since filter is not available for HTML Collection
 	let getInputs = [].filter.call(formElem.elements, (el) => el.nodeName === 'INPUT');
 	// 2. Store data in the object. If there is no name, it will not store the data;
 	// Utilizes the input name and value attributes to get the name and value
@@ -382,10 +544,13 @@ function setSuccessMsg(getInput) {
 	getFormGrp.classList.remove('error');
 }
 /*
- ** Clears input values
- ** Parameters : DOM elements */
-function clearInputValues(...elements) {
-	elements.forEach((element) => element && (element.value = ''));
+ ** Indicates successful message in the input element
+ ** Parameters : inputElement */
+function resetMsg(getInput) {
+	const getFormGrp = getInput.parentElement;
+	// Add error class
+	getFormGrp.classList.remove('success');
+	getFormGrp.classList.remove('error');
 }
 /*
  ** Creates new table row
@@ -576,6 +741,48 @@ function dispAcctHolder() {
 	// Append to html table
 	getTable.appendChild(newTBody);
 }
+function dispBudget() {
+	// 2. Delete existing data
+	const getTable = document.querySelector('#list-budget');
+	getTable.removeChild(getTable.lastElementChild);
+	// 3. Create new table body
+	const newTBody = document.createElement('tbody');
+	// 4. Retrieve data
+	for (let i = 0; i < userObj.budgetList.length; i++) {
+		let { date, transactionType, amt } = userObj.budgetList[i];
+		// 5. Create table row for each data
+		const newTr = createTblRow(date, transactionType, amt);
+		// 6. Add action buttons
+		const newTd = document.createElement('td');
+
+		const newDiv = document.createElement('div');
+		newDiv.className = 'btn-action d-flex f-row f-justify-start';
+		newDiv.addEventListener('click', editBudget);
+		const newEditBtn = document.createElement('span');
+		newEditBtn.className = 'far fa-edit';
+		const newPar = document.createElement('p');
+		newPar.textContent = 'Edit';
+
+		const newDiv2 = document.createElement('div');
+		newDiv2.className = 'btn-action d-flex f-row f-justify-start';
+		newDiv2.addEventListener('click', removeBudget);
+		const newDeleteBtn = document.createElement('span');
+		newDeleteBtn.className = 'far fa-trash-alt';
+		const newPar2 = document.createElement('p');
+		newPar2.textContent = 'Delete';
+
+		newDiv.appendChild(newEditBtn);
+		newDiv.appendChild(newPar);
+		newDiv2.appendChild(newDeleteBtn);
+		newDiv2.appendChild(newPar2);
+		newTd.appendChild(newDiv);
+		newTd.appendChild(newDiv2);
+		newTr.appendChild(newTd);
+		newTBody.appendChild(newTr);
+	}
+	// Append to html table
+	getTable.appendChild(newTBody);
+}
 /** Description  : Display account holders */
 function dispbankStatements() {
 	// 1. Get bank account
@@ -612,9 +819,17 @@ function getBalance() {
 }
 /*
  ** Function  : Display account balance */
-function dispAcctBalance(username) {
-	let getAcctBal = document.querySelector('.acct-bal');
-	getAcctBal.textContent = formatNum(getBalance());
+function dispAcctBalance(username = userObj.username) {
+	let getBankBal = document.querySelectorAll('.bank-bal');
+	let getIncBal = document.querySelector('#inc-bal');
+	let getExpBal = document.querySelector('#exp-bal');
+	let getAcctBal = document.querySelector('#acct-bal');
+	getBankBal.forEach((bankBal) => {
+		bankBal.textContent = formatNum(getBalance());
+	});
+	getIncBal.textContent = formatNum(userObj.incBal);
+	getExpBal.textContent = formatNum(userObj.expBal);
+	getAcctBal.textContent = formatNum(userObj.balance);
 }
 // Creates alert notifications
 function showNotif(message, type) {
@@ -628,6 +843,18 @@ function showNotif(message, type) {
 	setTimeout(() => {
 		getNotif.className = 'alert d-none';
 	}, 1000);
+}
+function addBudget(amt, type, desc) {
+	if (type === 'income') {
+		userObj.budgetList.push(new Transaction(`Income: ${desc}`, formatNum(amt)));
+		userObj.incBal += amt;
+		userObj.balance += amt;
+	} else if (type === 'expense') {
+		userObj.budgetList.push(new Transaction(`Expense: ${desc}`, formatNum(amt)));
+		userObj.expBal -= amt;
+		userObj.balance -= amt;
+	}
+	dispBudget();
 }
 /* ************************************
  ** 	     	 CLASSES
@@ -661,6 +888,17 @@ class AccountHolder extends User {
 	constructor(username, firstName, lastName, email, password, userType, bankNum) {
 		super(username, firstName, lastName, email, password, userType);
 		this.bankNum = bankNum;
+		this.budgetList = [];
+		this.incBal = 0;
+		this.expBal = 0;
+		this.initialBal(startBalance); // Updates new balance
+	}
+	// Sets the initial balance
+	initialBal(startBalance = 0) {
+		// 2. Add to transaction history
+		this.transactions.push(new Transaction('Initial Balance', formatNum(startBalance)));
+		// 3. Update new balance
+		this.balance = startBalance;
 	}
 }
 
@@ -691,114 +929,95 @@ bankAccounts.push(...loadAccounts);
 let loadUsers = JSON.parse(localStorage.getItem('users'));
 users.push(...loadUsers);
 
-// || Navigation Bar
-getNavItems.forEach((navItem) => {
-	navItem.addEventListener('click', (e) => {
-		const btnClicked = e.target.parentElement;
-		let index = Array.prototype.indexOf.call(getNavItems, btnClicked);
-		// Hide all tabs
-		getActionTabs.forEach((tab) => {
-			tab.classList.add('d-none');
-		});
-		getActionTabs[index].classList.remove('d-none');
-	});
-});
-getNavItems[4].addEventListener('click', () => activeUser === 'default' && dispbankStatements());
-getNavItems[5].addEventListener('click', dispAcctHolder);
-// || Section 4: Cash In
-getSubmitBtns[2].addEventListener('click', () => {
-	// 1. Get account number and cash in amount
-	// If user is an account holder, the bank number retrieved from the user information
-	const getInputAcctNo = document.querySelector('#deposit-recpt');
-	let acctNo = activeUser === 'default' ? userObj.bankNum : getInputAcctNo.value;
+/* getActionBtns[0].addEventListener('click', (ev) => {
+	 // 1. Get data
+	 let field = ev.target;
+	 let tblRow = field.parentElement.parentElement.parentElement;
+	 let tblData = tblRow.children;
+ 
+	 let date = new Date(tblData[0].textContent);
+	 let formatDate = date.toISOString().split('T')[0];
+	 let desc = tblData[1].textContent;
+	 let num = tblData[2].textContent;
+	 let formatNum = num.split(' ')[1];
+	 let amt = parseFloat(formatNum);
+	 // 2. Input to modal
+	 let secEditBudget = document.querySelector('#sec-editBudget');
+	 let form = document.forms['editBudget'];
+	 let inputDate = form.elements['date'];
+	 let inputDesc = form.elements['desc'];
+	 let inputAmt = form.elements['amt'];
+	 inputDate.value = formatDate;
+	 inputDesc.value = desc;
+	 inputAmt.value = amt;
+	 // 3. Show modal
+	 secEditBudget.classList.remove('d-none');
+ }); */
+function removeBudget(ev) {
+	// 1. Get data
+	let field = ev.target;
+	let tblRow = field.parentElement.parentElement.parentElement;
+	let tblData = tblRow.children;
+	const getTable = document.querySelector('#list-budget');
+	const getTRows = getTable.querySelectorAll('tbody > tr');
 
-	const getInputAmt = document.querySelector('#deposit-amt');
-	let cashInAmt = parseFloat(getInputAmt.value);
-	// 2. Deposit amount to bank account
-	deposit(acctNo, cashInAmt);
-	// 3. Reset input amount
-	clearInputValues(getInputAcctNo, getInputAmt);
-	// 4. Display new balance
-	dispAcctBalance(userObj.username);
-	// 5. Show Notificaton
-	showNotif('Cash in successful', 'success');
-});
-// || Section 5: Pay Bills
-getSubmitBtns[3].addEventListener('click', () => {
-	// 1. Get account number, biller and payment
-	const getInputAcctNo = document.querySelector('#paybill-acctNo');
-	let acctNo = activeUser === 'default' ? userObj.bankNum : getInputAcctNo.value;
+	let index = Array.prototype.indexOf.call(getTRows, tblRow);
+	userObj.budgetList.splice(index, 1);
+	tblRow.remove();
+}
+function editBudget(ev) {
+	// 1. Get data
+	let field = ev.target;
+	let tblRow = field.parentElement.parentElement.parentElement;
+	let tblData = tblRow.children;
+	const getTable = document.querySelector('#list-budget');
+	const getTRows = getTable.querySelectorAll('tbody > tr');
 
-	const getBiller = document.querySelector('#paybill-biller');
-	let biller = getBiller.value;
+	let index = Array.prototype.indexOf.call(getTRows, tblRow);
+	editBudgetIndex = index;
+	let { date, transactionType, amt } = userObj.budgetList[index];
+	// 2. Input to modal
+	let secEditBudget = document.querySelector('#sec-editBudget');
+	let form = document.forms['editBudget'];
+	let inputDate = form.elements['date'];
+	let inputDesc = form.elements['desc'];
+	let inputAmt = form.elements['amt'];
 
-	let getInputAmt = document.querySelector('#paybill-amt');
-	let amt = parseFloat(getInputAmt.value);
-	// 2. Deduct amount of payment and update balance
-	payBill(acctNo, biller, amt);
-	// 3. Clear input amount
-	clearInputValues(getInputAcctNo, getBiller, getInputAmt);
-	// 4. Display new balance
-	dispAcctBalance(userObj.username);
-});
-// || Section 6: Transfer Funds
-getSubmitBtns[4].addEventListener('click', () => {
-	// 1. Get account no(sender), account no(receiver) and amt
-	const getSenderAcctNo = document.querySelector('#transfer-from');
-	let senderAcctNo = activeUser === 'default' ? userObj.bankNum : getSenderAcctNo.value;
+	let formatdate = new Date(date).toISOString().split('T')[0];
+	inputDate.value = formatdate;
+	inputDesc.value = transactionType;
+	let formatNum = amt.split('PHP ')[1];
+	inputAmt.value = parseFloat(formatNum.replace(',', ''));
+	// 3. Show modal
+	secEditBudget.classList.remove('d-none');
+}
 
-	const getReceiverAcctNo = document.querySelector('#transfer-to');
-	let receiverAcctNo = getReceiverAcctNo.value;
-
-	let getInputAmt = document.querySelector('#transfer-amt');
-	let amt = parseFloat(getInputAmt.value);
-	// 2. Update balance
-	sendMoney(senderAcctNo, receiverAcctNo, amt);
-	// 3. Reset input amount
-	clearInputValues(getSenderAcctNo, getReceiverAcctNo, getInputAmt);
-	// 4. Display new balance
-	dispAcctBalance(userObj.username);
-});
-// || Section 7: Withdraw Funds
-getSubmitBtns[5].addEventListener('click', () => {
-	// 1. Get account number, amt
-	const getInputAcctNo = document.querySelector('#withdrw-recpt');
-	let acctNo = activeUser === 'default' ? userObj.bankNum : getInputAcctNo.value;
-
-	const getInputAmt = document.querySelector('#withdrw-amt');
-	let cashOutAmt = parseFloat(getInputAmt.value);
-	// 2. Deduct amount of payment and update balance
-	withdraw(acctNo, cashOutAmt);
-	// 4. Reset input amount
-	clearInputValues(getInputAcctNo, getInputAmt);
-	// 4. Display new balance
-	dispAcctBalance(userObj.username);
-});
-// || Section 8: Bank Statement
-getSubmitBtns[6].addEventListener('click', (e) => {
-	e.preventDefault();
-	dispbankStatements();
-	let name;
-	if (activeUser === 'bankmgr') {
-		let acctNo = getBankStmForm.elements.acctNo.value;
-		name = searchAcctHolder(acctNo).completeName;
-	}
-	document.querySelector('#bnkStmAccNo').innerHTML = `Account Name: <i class="text-primary">${name}</i>`;
-	getBankStmForm.reset();
-});
-// || Section 9: Account Holders
-getNewAcctHolder.addEventListener('submit', (e) => {
-	e.preventDefault();
-	// 1. Get Form Data
-	let { firstName, lastName, startBalance } = storeFormData(getNewAcctHolder);
-	// 2. Store to bankAccounts array
-	bankAccounts.push(new BankAccount('123456789870', firstName, lastName, startBalance));
-	// 3. Clear form
-	getNewAcctHolder.reset();
-	// 4. Display update account holders
-	dispAcctHolder();
-});
-
-getNotif.addEventListener('click', (e) => {
-	getNotif.className = 'alert d-none';
-});
+/*
+ // || Section 8: Bank Statement
+ getSubmitBtns[6].addEventListener('click', (e) => {
+	 e.preventDefault();
+	 dispbankStatements();
+	 let name;
+	 if (activeUser === 'bankmgr') {
+		 let acctNo = getBankStmForm.elements.acctNo.value;
+		 name = searchAcctHolder(acctNo).completeName;
+	 }
+	 document.querySelector('#bnkStmAccNo').innerHTML = `Account Name: <i class="text-primary">${name}</i>`;
+	 getBankStmForm.reset();
+ });
+ // || Section 9: Account Holders
+ getNewAcctHolder.addEventListener('submit', (e) => {
+	 e.preventDefault();
+	 // 1. Get Form Data
+	 let { firstName, lastName, startBalance } = storeFormData(getNewAcctHolder);
+	 // 2. Store to bankAccounts array
+	 bankAccounts.push(new BankAccount('123456789870', firstName, lastName, startBalance));
+	 // 3. Clear form
+	 getNewAcctHolder.reset();
+	 // 4. Display update account holders
+	 dispAcctHolder();
+ });
+ 
+ getNotif.addEventListener('click', (e) => {
+	 getNotif.className = 'alert d-none';
+ }); */

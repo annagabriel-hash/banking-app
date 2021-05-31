@@ -4,435 +4,422 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Banking App</title>
-		<link rel="preconnect" href="https://fonts.gstatic.com" />
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lobster&family=Open+Sans:wght@400;600;700;800&family=Roboto:ital,wght@0,300;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet" />
-		<link rel="shortcut icon" href="data:image/x-icon;" type="image/x-icon" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/v4-shims.css" />
 		<link rel="stylesheet" href="styles/reset.css" />
 		<link rel="stylesheet" href="styles/banking.css" />
+		<title>myBank</title>
 	</head>
 	<body>
-		<!-- Section 1: Login Page -->
-		<div class="alert alert-success d-none"><i>Transaction Successul</i></div>
-		<section class="sec-log">
-			<i class="fas fa-piggy-bank fa-5x text-primary d-block"></i>
-			<h1 class="text-primary">myBank</h1>
-			<h2 class="text-primary mt-2">Log In</h2>
-			<form action="#" method="POST" id="loginForm">
-				<fieldset>
+		<nav class="d-none">
+			<div class="logo">
+				<i class="fas fa-piggy-bank fa-5x d-block text-white"></i>
+				<h1 class="brand text-white">myBank</h1>
+			</div>
+			<div class="nav-items active">
+				<i class="fas fa-home"></i>
+				<p>Home</p>
+			</div>
+			<div class="nav-items">
+				<i class="fas fa-money-check-alt"></i>
+				<p>Accounts</p>
+			</div>
+			<div class="nav-items">
+				<i class="fas fa-wallet"></i>
+				<p>Budget</p>
+			</div>
+			<div class="nav-items">
+				<i class="far fa-file-alt"></i>
+				<p>Reports</p>
+			</div>
+		</nav>
+		<main class="pl-max">
+			<!-- Section 1: Login Page -->
+			<div class="alert alert-success d-none"><i>Transaction Successul</i></div>
+			<section class="d-flex f-justify-start pt-1" id="sec-login">
+				<i class="fas fa-piggy-bank fa-5x text-primary d-block"></i>
+				<h1 class="text-primary brand">myBank</h1>
+				<h2 class="mt-1">Log In</h2>
+				<form action="" method="post" id="loginForm" class="mt-1">
 					<div class="form-grp">
 						<label for="login-user">Username*</label>
-						<input type="text" name="username" id="login-user" minlength="5" value="AGABRIEL" required />
+						<input type="text" name="username" id="login-user" value="AGABRIEL" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
 						<small></small>
 					</div>
-					<div class="form-grp">
+					<div class="form-grp mt-xs">
 						<label for="login-password">Password*</label>
 						<input type="password" name="password" id="login-pwd" value="1234" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
 						<small></small>
 					</div>
-					<div class="btn-grp d-flex flex-row mt-2">
-						<button type="reset" class="btn text-white mr-2">Reset</button>
-						<button type="submit" class="btn text-white">Submit</button>
-					</div>
-				</fieldset>
-				<p class="text-center mt-2">Don't have an account? <em class="text-primary" id="signup-link">Sign Up!</em></p>
-			</form>
-		</section>
-		<!-- Section 2: Sign Up Page -->
-		<section class="modal sec-newusr d-none">
-			<div class="modal-content">
-				<h2 class="text-primary">Sign Up</h2>
-				<p>Please fill in this form to create an new user.</p>
-				<hr />
-				<form action="" id="newUserForm" method="POST">
-					<fieldset class="mt-1 tab-newusr">
-						<legend>Bank Information</legend>
-						<div class="form-grp">
-							<label for="newusr-acctno">Account Number</label>
-							<input type="number" name="acctno" id="acctno" placeholder="123456789000" maxlength="12" minlength="12" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-					</fieldset>
-					<fieldset class="mt-1 tab-newusr d-none">
-						<legend>Basic Information</legend>
-						<div class="form-grp">
-							<label for="newusr-firstname">First Name</label>
-							<input type="text" name="firstname" id="newusr-firstname" placeholder="Enter first name" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-						<div class="form-grp">
-							<label for="newusr-lastname">Last Name</label>
-							<input type="text" name="lastname" id="newusr-lastname" placeholder="Enter last name" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-					</fieldset>
-					<fieldset class="d-none mt-1 tab-newusr">
-						<legend>Contact Details</legend>
-						<div class="form-grp">
-							<label for="newusr-email">Email</label>
-							<input type="email" id="newusr-email" name="email" placeholder="Enter email address" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-					</fieldset>
-					<fieldset class="tab-newusr d-none">
-						<legend>Login Details</legend>
-						<div class="form-grp">
-							<label for="newusr-username">User Name</label>
-							<input type="text" id="newusr-username" name="username" placeholder="Enter username" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-						<div class="form-grp">
-							<label for="newusr-password">Password</label>
-							<input type="password" id="newusr-password" name="password" placeholder="Enter password" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-						<div class="form-grp">
-							<label for="newusr-chkpassword">Confirm Password</label>
-							<input type="password" id="newusr-chkpassword" name="chkpassword" placeholder="Re-enter password" required />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-					</fieldset>
-					<div class="btn-grp text-center mt-2">
-						<button type="button" class="btn text-white d-none" id="prevBtn">Prev</button>
-						<button type="button" class="btn text-white d-none" id="nextBtn">Next</button>
-						<button type="submit" class="btn text-white d-none" id="btn-signup">Sign Up</button>
+					<div class="btn-grp text-center">
+						<button type="reset" class="btn mr-1">Reset</button>
+						<button type="submit" class="btn">Submit</button>
 					</div>
 				</form>
-			</div>
-		</section>
-		<main class="d-none">
-			<!-- Section 3: DashBoard -->
-			<div class="card">
-				<span class="text-lg text-white acct-bal">Php 24.00</span>
-				<p class="text-white">Account Name: <em id="acct-no">123456789870</em></p>
-				<p class="text-white">Complete Name: <em id="acct-name">GABRIEL, ANNA YSABEL</em></p>
-			</div>
-			<nav>
-				<ul class="navbar mt-1">
-					<li class="nav-items">
-						<img src="https://static.thenounproject.com/png/150256-200.png" alt="" />
-						<span class="text-center">Cash<br />In</span>
-					</li>
-					<li class="nav-items">
-						<img src="https://static.thenounproject.com/png/3006512-200.png" alt="" />
-						<span class="text-center">Pay<br />Bills</span>
-					</li>
-					<li class="nav-items">
-						<img src="https://static.thenounproject.com/png/3010973-200.png" alt="" />
-						<span class="text-center">Send<br />Money</span>
-					</li>
-					<li class="nav-items">
-						<img src="https://static.thenounproject.com/png/2146328-200.png" alt="" />
-						<span class="text-center">Cash<br />Out</span>
-					</li>
-					<li class="nav-items">
-						<img src="https://static.thenounproject.com/png/3570107-200.png" alt="" />
-						<span class="text-center">Bank<br />Statement</span>
-					</li>
-					<li class="nav-items view-bankmgr">
-						<img src="https://static.thenounproject.com/png/81095-200.png" alt="" />
-						<span class="text-center">Account<br />Holders</span>
-					</li>
-					<li class="nav-items view-default">
-						<img src="https://static.thenounproject.com/png/3749724-200.png" alt="" />
-						<span class="text-center">Manage<br />Budget</span>
-					</li>
-				</ul>
-			</nav>
-			<!-- Section 1=4: Cash In -->
-			<section class="tab">
-				<h2 class="text-primary">Cash In</h2>
-				<fieldset class="d-flex flex-row">
-					<div class="form-grp mr-1 flex-grow view-bankmgr">
-						<label for="deposit-recpt">Account Number</label>
-						<input type="number" name="deposit-recpt" id="deposit-recpt" placeholder="123456789000" class="validateAcctNo" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
-					</div>
-					<div class="form-grp flex-grow">
-						<label for="bnk-deposit-amt">Amount</label>
-						<input type="number" name="deposit-amt" id="deposit-amt" min="0" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
-					</div>
-				</fieldset>
-				<div class="btn-grp mt-2 mb-2">
-					<button type="submit" class="btn text-white">Submit</button>
+				<p>Don't have an account? <a href="#" id="signup-link" class="text-bold">Sign Up!</a></p>
+			</section>
+			<!-- Section 2: Sign Up Page -->
+			<section class="modal d-none" id="sec-newusr">
+				<div class="modal-content">
+					<h2 class="mb-xs">Sign Up</h2>
+					<p>Please fill out this form to create your account</p>
+					<hr />
+					<form action="" id="newUserForm" method="POST">
+						<fieldset class="mt-xs">
+							<legend>Bank Information</legend>
+							<div class="form-grp">
+								<label for="newusr-acctno">Account Number</label>
+								<input type="number" name="acctno" id="acctno" placeholder="123456789000" maxlength="12" minlength="12" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+						</fieldset>
+						<fieldset class="d-none mt-xs">
+							<legend>Basic Information</legend>
+							<div class="form-grp">
+								<label for="newusr-firstname">First Name</label>
+								<input type="text" name="firstname" id="newusr-firstname" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="form-grp">
+								<label for="newusr-lastname">Last Name</label>
+								<input type="text" name="lastname" id="newusr-lastname" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+						</fieldset>
+						<fieldset class="d-none mt-xs">
+							<legend>Contact Details</legend>
+							<div class="form-grp">
+								<label for="newusr-email">Email</label>
+								<input type="email" id="newusr-email" name="email" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+						</fieldset>
+						<fieldset class="d-none mt-xs">
+							<legend>Login Details</legend>
+							<div class="form-grp">
+								<label for="newusr-username">User Name</label>
+								<input type="text" id="newusr-username" name="username" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small>Error message</small>
+							</div>
+							<div class="form-grp">
+								<label for="newusr-password">Password</label>
+								<input type="password" id="newusr-password" name="password" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small>Error message</small>
+							</div>
+							<div class="form-grp">
+								<label for="newusr-chkpassword">Confirm Password</label>
+								<input type="password" id="newusr-chkpassword" name="chkpassword" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small>Error message</small>
+							</div>
+						</fieldset>
+						<div class="btn-grp">
+							<button type="button" id="prevBtn" class="btn mr-1">Prev</button>
+							<button type="button" id="nextBtn" class="btn">Next</button>
+							<button type="submit" id="btn-signup" class="btn d-none">Sign Up</button>
+						</div>
+					</form>
 				</div>
 			</section>
-			<!-- Section 5: Pay Bills -->
-			<section class="tab d-none">
-				<h2 class="text-primary">Pay Bills</h2>
-				<fieldset>
-					<div class="form-grp">
-						<label for="paybill-acctNo" class="view-bankmgr">Account Number</label>
-						<input type="number" name="paybill-recpt" class="view-bankmgr validateAcctNo" id="paybill-acctNo" placeholder="123456789000" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
+			<!-- Section 3: Dashboard -->
+			<section class="p-d pt-2 tab" id="sec-dboard">
+				<div id="greeting">
+					<h1 class="text-primary">Hi <span class="text-primary">Anna</span>!</h1>
+				</div>
+				<div id="dashboard">
+					<div class="card d-flex f-align-left">
+						<h3>Accounts</h3>
+						<em class="text-medium bank-bal">PHP 5,000</em>
 					</div>
-					<fieldset class="d-flex flex-row">
-						<div class="form-grp mr-1 flex-grow">
-							<label for="paybill-biller">Biller</label>
-							<input type="text" name="paybill-biller" id="paybill-biller" />
-						</div>
-						<div class="form-grp mr-1 flex-grow">
-							<label for="paybill-amt">Amount</label>
-							<input type="number" name="paybill-amt" id="paybill-amt" min="0" />
-						</div>
-						<button class="btn btn-circle btn-grey text-white btn-bill-add">+</button>
-					</fieldset>
-				</fieldset>
-				<div class="btn-grp mb-2">
-					<button type="submit" class="btn text-white">Submit</button>
+					<div class="card d-flex f-align-left">
+						<h3>Income</h3>
+						<em class="text-medium" id="inc-bal">PHP 5,000</em>
+					</div>
+					<div class="card d-flex f-align-left">
+						<h3>Expenses</h3>
+						<em class="text-medium" id="exp-bal">PHP 5,000</em>
+					</div>
 				</div>
 			</section>
-			<!-- Section 6: Transfer Funds -->
-			<section class="tab d-none">
-				<h2 class="text-primary">Transfer Funds</h2>
-				<fieldset>
-					<div class="form-grp">
-						<label for="transfer-from" class="view-bankmgr">Transfer from:</label>
-						<input type="number" name="transfer-from" id="transfer-from" placeholder="123456780070" class="view-bankmgr validateAcctNo" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
+			<!-- Section 4: Accounts Management -->
+			<section id="sec-accounts" class="tab">
+				<div class="pl-1 d-flex f-align-left sec-info">
+					<h2>Accounts</h2>
+					<div class="d-flex f-align-left">
+						<h4>Account Number: <span>123456789870</span></h4>
+						<h4>Name: <span>Anna Ysabel B. Gabriel</span></h4>
+						<h4>Cash Balance: <span class="bank-bal">Php 100</span></h4>
 					</div>
-					<fieldset class="d-flex flex-row">
-						<div class="form-grp mr-1 flex-grow">
-							<label for="transfer-to">Transfer to:</label>
-							<input type="number" name="transfer-to" id="transfer-to" placeholder="123456780070" class="validateAcctNo" />
+				</div>
+				<div>
+					<!-- 4.1 Account number search bar -->
+					<form action="" class="p-d d-none">
+						<div class="form-grp search-bar">
+							<label for="search-acctNo">Account Number</label>
+							<input type="search" name="search-acctNo" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
+							<small></small>
+							<button type="submit" class="btn search-btn fas fa-search"></button>
 						</div>
-						<div class="form-grp flex-grow">
-							<label for="transfer-amt">Amount</label>
-							<input type="number" name="transfer-amt" id="transfer-amt" min="0" />
-							<i class="fas fa-check-circle"></i>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Error message</small>
-						</div>
-					</fieldset>
-				</fieldset>
-				<div class="btn-grp mb-2">
-					<button type="submit" class="btn text-white">Submit</button>
+						<div class="btn-grp"></div>
+					</form>
+					<!-- 4.2 List of Accounts -->
+					<div class="tbl-container d-none">
+						<table>
+							<caption>
+								List of Accounts
+							</caption>
+							<thead>
+								<tr>
+									<th>Account Number</th>
+									<th>Complete Name</th>
+									<th>Balance</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1234 4567 7890 0000</td>
+									<td>GABRIEL, ANNA YSABEL</td>
+									<td>$ 24.00</td>
+								</tr>
+								<tr>
+									<td>1234 4567 7890 0000</td>
+									<td>GABRIEL, ANNA YSABEL</td>
+									<td>$ 24.00</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div>
+					<!-- 4.3 Account Information -->
+					<!-- 4.4 Account Updates -->
+					<!-- 4.4.1 Cash In -->
+					<div class="action-tab p-d">
+						<h3>Cash In</h3>
+						<form action="#" method="POST" id="cashInForm">
+							<div class="form-grp">
+								<label for="deposit-amt">Amount</label>
+								<input type="number" name="amt" id="deposit-amt" min="1" required placeholder="1.00" />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="btn-grp">
+								<button type="submit" class="btn">Submit</button>
+							</div>
+						</form>
+					</div>
+					<!-- 4.4.2 Pay Bills -->
+					<div class="action-tab p-d">
+						<h3>Pay Bills</h3>
+						<form action="#" method="POST" id="payBillsForm">
+							<div class="form-grp">
+								<label for="paybill-biller">Biller</label>
+								<input type="text" name="biller" id="paybill-biller" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="form-grp">
+								<label for="paybill-amt">Amount</label>
+								<input type="number" name="amt" id="paybill-amt" min="1" required placeholder="1.00" />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="btn-grp">
+								<button type="submit" class="btn">Submit</button>
+							</div>
+						</form>
+					</div>
+					<!-- 4.4.3 Transfer Funds -->
+					<div class="action-tab p-d">
+						<h3>Transfer Funds</h3>
+						<form action="#" method="post" id="transferForm">
+							<div class="form-grp">
+								<label for="transfer-to">Transfer to:</label>
+								<input type="number" name="acctNo" id="transfer-to" placeholder="123456780070" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="form-grp">
+								<label for="transfer-amt">Amount</label>
+								<input type="number" name="amt" id="transfer-amt" min="1" required placeholder="1.00" />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="btn-grp">
+								<button type="submit" class="btn">Submit</button>
+							</div>
+						</form>
+					</div>
+					<!-- 4.4.5 Withdraw -->
+					<div class="action-tab p-d">
+						<h3>Withdraw Funds</h3>
+						<form action="#" method="post" id="withdrawForm">
+							<div class="form-grp">
+								<label for="withdrw-amt">Amount</label>
+								<input type="number" name="amt" id="withdrw-amt" placeholder="1.00" min="1" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="btn-grp">
+								<button type="submit" class="btn">Submit</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</section>
-			<!-- Section 7: Withdraw Funds -->
-			<section class="tab d-none">
-				<h2 class="text-primary">Withdraw Funds</h2>
-				<fieldset class="d-flex flex-row">
-					<div class="form-grp mr-1 flex-grow view-bankmgr">
-						<label for="withdrw-recpt">Account Number</label>
-						<input type="number" name="withdrw-recpt" id="withdrw-recpt" placeholder="123456789000" class="validateAcctNo" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
+			<!-- Section 5: Budget Tracker -->
+			<section id="sec-budget" class="tab">
+				<div class="pl-1 d-flex-f-align-left sec-info">
+					<h2>Budget</h2>
+					<div class="d-flex f-align-left">
+						<h4>Name: <span>Anna Ysabel B. Gabriel</span></h4>
+						<h4>Balance: <span id="acct-bal">Php 100</span></h4>
 					</div>
-					<div class="form-grp flex-grow">
-						<label for="withdrw-amt">Amount</label>
-						<input type="number" name="withdrw-amt" id="withdrw-amt" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
-					</div>
-				</fieldset>
-				<div class="btn-grp mb-2">
-					<button type="submit" class="btn text-white">Submit</button>
 				</div>
-			</section>
-			<!-- Section 8: Manage Bank Statement -->
-			<section class="tab d-none">
-				<h2 class="text-primary">Bank Statement</h2>
-				<form action="" id="bankStmntForm" class="view-bankmgr">
-					<div class="form-grp search-bar">
-						<input type="number" class="validateAcctNo" name="acctNo" id="bank-stmnt" maxlength="12" placeholder="Account Number" />
-						<i class="fas fa-check-circle"></i>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
-						<button type="submit" class="btn text-white search-btn fas fa-search"></button>
-					</div>
-				</form>
-				<h3 class="mb-2" id="bnkStmAccNo"></h3>
-				<h3>Bank Statement</h3>
-				<div class="tbl-container">
-					<table id="tblBnkStatement">
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Description</th>
-								<th>Amount</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>05/26/2021</td>
-								<td>Deposit to 1234 5678 9078</td>
-								<td>PHP 100.00</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
-			<!-- Section 9: Manage Account Holders -->
-			<section class="tab d-none view-bankmgr">
-				<h2 class="text-primary">Manage Account Holders</h2>
-				<h3>New Account Holder</h3>
-				<table>
-					<thead>
-						<tr>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Initial Balance</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<form action="" id="newAcctNoForm">
-								<td><input type="text" name="firstName" /></td>
-								<td><input type="text" name="lastName" /></td>
-								<td><input type="number" name="startBalance" min="0" placeholder="0.00" /></td>
-								<td>
-									<button class="text-primary fa fa-plus-circle" id="btn-acct-no" type="submit"></button>
-								</td>
-							</form>
-						</tr>
-					</tbody>
-				</table>
-				<h3>Existing Account Holders</h3>
-				<table id="list-acctHolders">
-					<thead>
-						<tr>
-							<th>Account Number</th>
-							<th>Complete Name</th>
-							<th>Balance</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>1234 4567 7890 0000</td>
-							<td>GABRIEL, ANNA YSABEL</td>
-							<td>$ 24.00</td>
-							<td>
-								<span class="fa fa-plus-circle btn-action"></span>
-								<span class="far fa-trash-alt btn-action"></span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</section>
-			<!-- Section 9: Overall Dashboard -->
-			<section class="tab">
-				<h2 class="text-primary">Income</h2>
-				<form action="" method="POST">
-					<fieldset>
+				<!-- 5.x Income -->
+				<div class="action-tab p-d">
+					<h3>Income</h3>
+					<form action="" method="post" id="incForm">
 						<div class="form-grp">
-							<label for="inc-desc">Description</label>
-							<input type="number" name="dexc" id="inc-desc" placeholder="Source of Income" required />
+							<label for="inc-source">Description</label>
+							<input type="text" name="desc" id="inc-source" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small></small>
 						</div>
 						<div class="form-grp">
 							<label for="inc-amt">Amount</label>
-							<input type="number" name="amt" id="inc-amt" placeholder="1.00" min="1" required />
+							<input type="number" name="amt" id="inc-amt" min="1" required placeholder="1.00" />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small></small>
 						</div>
-					</fieldset>
-					<div class="btn-grp mb-2">
-						<button type="submit" class="btn text-white">Submit</button>
-					</div>
-				</form>
-				<h2 class="text-primary">Expense</h2>
-				<form action="" method="POST">
-					<fieldset>
+						<div class="btn-grp">
+							<button type="submit" class="btn">Submit</button>
+						</div>
+					</form>
+				</div>
+				<!-- 5.x Expenses -->
+				<div class="action-tab p-d">
+					<h3>Expenses</h3>
+					<form action="" method="post" id="expForm">
 						<div class="form-grp">
-							<label for="exp-desc">Description</label>
-							<input type="number" name="exp" id="exp-desc" placeholder="Expense Item" required />
+							<label for="exp-source">Description</label>
+							<input type="text" name="desc" id="exp-source" required />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small></small>
 						</div>
 						<div class="form-grp">
 							<label for="exp-amt">Amount</label>
-							<input type="number" name="amt" id="exp-amt" placeholder="1.00" min="1" required />
+							<input type="number" name="amt" id="exp-amt" min="1" required placeholder="1.00" />
 							<i class="fas fa-check-circle"></i>
 							<i class="fas fa-exclamation-circle"></i>
 							<small></small>
 						</div>
-					</fieldset>
-					<div class="btn-grp mb-2">
-						<button type="submit" class="btn text-white">Submit</button>
-					</div>
-				</form>
-			</section>
-			<!-- Section 10: Dashboard: User Admin -->
-			<section class="sec-user d-none">
-				<div class="card">
-					<span class="text-lg text-white">3 users</span>
-					<ul class="d-flex flex-row user-dash">
-						<li class="text-center user-item">
-							<span class="text-m">3</span>
-							Account<br />Holders
-						</li>
-						<li class="text-center user-item">
-							<span class="text-m">3</span>
-							<p>Bank<br />Managers</p>
-						</li>
-						<li class="text-center user-item">
-							<span class="text-m">1</span>
-							System<br />Admin
-						</li>
-					</ul>
+						<div class="btn-grp">
+							<button type="submit" class="btn">Submit</button>
+						</div>
+					</form>
 				</div>
-				<div class="p-2">
-					<h2 class="text-primary">Manage Users</h2>
-					<table id="list-users">
+				<!-- 5.x Transaction List -->
+				<div class="action-tab p-d tbl-container">
+					<table id="list-budget">
+						<caption>
+							Budget List
+						</caption>
 						<thead>
 							<tr>
-								<th>Username</th>
-								<th>User Type</th>
-								<th>Action</th>
+								<th>Date</th>
+								<th>Description</th>
+								<th>Amount</th>
+								<th></th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>annagabriel</td>
-								<td>Account Holder</td>
-								<td><span class="far fa-trash-alt"></span></td>
-							</tr>
-						</tbody>
+						<tbody></tbody>
+					</table>
+				</div>
+				<!-- Modal: Edit Transaction -->
+				<div class="modal d-none" id="sec-editBudget">
+					<div class="modal-content">
+						<h2 class="mb-xs">Edit Budget</h2>
+						<form action="" id="editBudget">
+							<div class="form-grp">
+								<label for="editBudget-date">Date</label>
+								<input type="date" name="date" id="editBudget-date" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="form-grp">
+								<label for="editBudget-desc">Description</label>
+								<input type="text" name="desc" id="editBudget-desc" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="form-grp">
+								<label for="editBudget-amt">Amount</label>
+								<input type="number" name="amt" id="editBudget-amt" min="1" required />
+								<i class="fas fa-check-circle"></i>
+								<i class="fas fa-exclamation-circle"></i>
+								<small></small>
+							</div>
+							<div class="btn-grp">
+								<button type="submit" class="btn">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+			<!-- Section 6: Reports -->
+			<section class="p-d tab">
+				<h2>Reports</h2>
+				<!-- 6.1 Reports Search -->
+				<form action="#" method="post" class="mt-1">
+					<label for="report-list">Select report: </label>
+					<select name="reports" id="report-list">
+						<option value="bnkRpt">Bank Statement</option>
+						<option value="incRpt">Income</option>
+						<option value="expRpt">Expenses</option>
+					</select>
+					<div class="btn-grp">
+						<button type="submit" class="btn">View</button>
+					</div>
+				</form>
+				<!-- 6.2 Reports -->
+				<div class="tbl-container">
+					<table>
+						<caption>
+							Bank Statement
+						</caption>
 					</table>
 				</div>
 			</section>
-			<!-- Popup Message Box -->
 		</main>
 		<script src="scripts/sampledata.js"></script>
 		<script src="scripts/banking.js"></script>
