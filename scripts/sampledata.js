@@ -62,6 +62,26 @@ let testUsers = [
 		password: '1234',
 		userType: 'default',
 		bankNum: '123456789870',
+		incBal: 10150,
+		expBal: -1150,
+		balance: 15100.5,
+		budgetList: [
+			{
+				amt: 'PHP 10,000.00',
+				date: '5/31/2021',
+				transactionType: 'Income: SALARY',
+			},
+			{
+				amt: 'PHP 150.00',
+				date: '5/31/2021',
+				transactionType: 'Expense: MILK TEA',
+			},
+			{
+				amt: 'PHP 1,000.00',
+				date: '5/31/2021',
+				transactionType: 'Expense: UTILITIES',
+			},
+		],
 	},
 	{
 		username: 'MACHA',
