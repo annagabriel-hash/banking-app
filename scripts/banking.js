@@ -254,6 +254,9 @@ const FORM = {
 		const getSecBudget = document.querySelector('#sec-budget');
 		let forms = getSecBudget.querySelectorAll('form');
 		forms.forEach((form) => {
+			if (form.id === 'editBudget') {
+				return;
+			}
 			let inputDesc = form.elements['desc'];
 			let inputAmt = form.elements['amt'];
 			// While typing
@@ -833,7 +836,11 @@ function dispAcctBalance(username = userObj.username) {
 	});
 	getIncBal.textContent = formatNum(userObj.incBal);
 	getExpBal.textContent = formatNum(userObj.expBal);
-	getAcctBal.textContent = formatNum(userObj.balance);
+	acctBal = (function () {
+		return parseFloat(userObj.incBal) + parseFloat(userObj.expBal) + parseFloat(searchAcctHolder(userObj.bankNum).balance);
+	})();
+	console.log(acctBal);
+	getAcctBal.textContent = formatNum(acctBal);
 }
 // Creates alert notifications
 function showNotif(message, type) {
@@ -897,14 +904,20 @@ class AccountHolder extends User {
 		this.budgetList = [];
 		this.incBal = 0;
 		this.expBal = 0;
-		this.initialBal(startBalance); // Updates new balance
+		this.initialBal(); // Updates new balance
 	}
 	// Sets the initial balance
-	initialBal(startBalance = 0) {
+	initialBal() {
 		// 2. Add to transaction history
-		this.transactions.push(new Transaction('Initial Balance', formatNum(startBalance)));
+		let bankAccount = searchAcctHolder(bankNum);
 		// 3. Update new balance
-		this.balance = startBalance;
+		this.balance = bankAccount.balance;
+	}
+	getBalance() {
+		// 2. Add to transaction history
+		let bankAccount = searchAcctHolder(bankNum);
+		// 3. Update new balance
+		this.balance = bankAccount.balance + this.incBal + this.expBal;
 	}
 }
 
