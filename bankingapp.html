@@ -7,6 +7,7 @@
 		<title>Banking App</title>
 		<link rel="preconnect" href="https://fonts.gstatic.com" />
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lobster&family=Open+Sans:wght@400;600;700;800&family=Roboto:ital,wght@0,300;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+		<link rel="shortcut icon" href="data:image/x-icon;" type="image/x-icon" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/v4-shims.css" />
 		<link rel="stylesheet" href="styles/reset.css" />
@@ -23,17 +24,17 @@
 				<fieldset>
 					<div class="form-grp">
 						<label for="login-user">Username*</label>
-						<input type="text" name="username" id="login-user" minlength="5" required />
+						<input type="text" name="username" id="login-user" minlength="5" value="AGABRIEL" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
+						<small></small>
 					</div>
 					<div class="form-grp">
 						<label for="login-password">Password*</label>
-						<input type="password" name="password" id="login-pwd" required />
+						<input type="password" name="password" id="login-pwd" value="1234" required />
 						<i class="fas fa-check-circle"></i>
 						<i class="fas fa-exclamation-circle"></i>
-						<small>Error message</small>
+						<small></small>
 					</div>
 					<div class="btn-grp d-flex flex-row mt-2">
 						<button type="reset" class="btn text-white mr-2">Reset</button>
@@ -277,16 +278,24 @@
 				</form>
 				<h3 class="mb-2" id="bnkStmAccNo"></h3>
 				<h3>Bank Statement</h3>
-				<table id="tblBnkStatement">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Description</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
+				<div class="tbl-container">
+					<table id="tblBnkStatement">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Description</th>
+								<th>Amount</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>05/26/2021</td>
+								<td>Deposit to 1234 5678 9078</td>
+								<td>PHP 100.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</section>
 			<!-- Section 9: Manage Account Holders -->
 			<section class="tab d-none view-bankmgr">
@@ -298,7 +307,7 @@
 							<th>First Name</th>
 							<th>Last Name</th>
 							<th>Initial Balance</th>
-							<th>Action</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -321,7 +330,7 @@
 							<th>Account Number</th>
 							<th>Complete Name</th>
 							<th>Balance</th>
-							<th>Action</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -337,7 +346,54 @@
 					</tbody>
 				</table>
 			</section>
-			<!-- Section 5: Dashboard: User Admin -->
+			<!-- Section 9: Overall Dashboard -->
+			<section class="tab">
+				<h2 class="text-primary">Income</h2>
+				<form action="" method="POST">
+					<fieldset>
+						<div class="form-grp">
+							<label for="income-desc">Description</label>
+							<input type="number" name="income" id="income-desc" placeholder="Source of Income" required />
+							<i class="fas fa-check-circle"></i>
+							<i class="fas fa-exclamation-circle"></i>
+							<small></small>
+						</div>
+						<div class="form-grp">
+							<label for="income-desc">Amount</label>
+							<input type="number" name="amt" id="income-amt" placeholder="1.00" min="1" required />
+							<i class="fas fa-check-circle"></i>
+							<i class="fas fa-exclamation-circle"></i>
+							<small></small>
+						</div>
+					</fieldset>
+					<div class="btn-grp mb-2">
+						<button type="submit" class="btn text-white">Submit</button>
+					</div>
+				</form>
+				<h2 class="text-primary">Expense</h2>
+				<form action="" method="POST">
+					<fieldset>
+						<div class="form-grp">
+							<label for="income-desc">Description</label>
+							<input type="number" name="income" id="income-desc" placeholder="Expense Item" required />
+							<i class="fas fa-check-circle"></i>
+							<i class="fas fa-exclamation-circle"></i>
+							<small></small>
+						</div>
+						<div class="form-grp">
+							<label for="income-desc">Amount</label>
+							<input type="number" name="amt" id="income-amt" placeholder="1.00" min="1" required />
+							<i class="fas fa-check-circle"></i>
+							<i class="fas fa-exclamation-circle"></i>
+							<small></small>
+						</div>
+					</fieldset>
+					<div class="btn-grp mb-2">
+						<button type="submit" class="btn text-white">Submit</button>
+					</div>
+				</form>
+			</section>
+			<!-- Section 10: Dashboard: User Admin -->
 			<section class="sec-user d-none">
 				<div class="card">
 					<span class="text-lg text-white">3 users</span>
@@ -376,7 +432,6 @@
 					</table>
 				</div>
 			</section>
-			<!-- Section 11: Reports-->
 			<!-- Popup Message Box -->
 		</main>
 		<script src="scripts/sampledata.js"></script>
