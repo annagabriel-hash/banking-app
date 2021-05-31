@@ -204,14 +204,14 @@ button:focus {
 }
 /* || NOTIFICATIONS */
 .alert-success {
-	color: #3f8008;
-	background-color: #f2fdd1;
-	border-color: #e2fba3;
+	color: #167956;
+	background-color: #b7faba;
+	border-color: #32b36c;
 }
 .alert-warning {
-	color: #931f1f;
-	background-color: #ffefdf;
-	border-color: #ffdbc0;
+	color: #92245d;
+	background-color: #fec9c6;
+	border-color: #d8527f;
 }
 /* || SITE SECTIONS */
 #sec-accounts,

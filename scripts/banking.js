@@ -649,7 +649,8 @@ function deposit(bankNum, amt) {
 	bankAccount.balance += amt;
 	// 3. Add to transaction history
 	bankAccount.transactions.push(new Transaction('Deposit', formatNum(amt)));
-	console.log(`Added ${amt}. New Balance is ${bankAccount.balance}`);
+	showNotif('Deposit successful!', 'success');
+	// console.log(`Added ${amt}. New Balance is ${bankAccount.balance}`);
 	return bankAccount.balance;
 }
 /*
@@ -664,7 +665,8 @@ function withdraw(bankNum, amt) {
 	bankAccount.balance -= amt;
 	// 3. Add to transaction history
 	bankAccount.transactions.push(new Transaction('Withdrawal', formatNum(-amt)));
-	console.log(`Deducted ${amt}. New Balance is ${bankAccount.balance}`);
+	showNotif('Withdrawal successful!', 'success');
+	// console.log(`Deducted ${amt}. New Balance is ${bankAccount.balance}`);
 	return bankAccount.balance;
 }
 /*
@@ -682,7 +684,8 @@ function sendMoney(bankNumSender, bankNumReceiver, amt) {
 	// 3. Update transaction history
 	bankAccSender.transactions.push(new Transaction(`Sent to: ${bankNumReceiver}`, formatNum(-amt)));
 	bankAccReceiver.transactions.push(new Transaction(`Received from: ${bankNumSender}`, formatNum(amt)));
-	console.log(`Transferred ${formatNum(amt)} from account no:${bankNumSender} to account no:${bankNumReceiver}`);
+	showNotif('Transfer successful!', 'success');
+	// console.log(`Transferred ${formatNum(amt)} from account no:${bankNumSender} to account no:${bankNumReceiver}`);
 	return bankAccSender.balance;
 }
 /*
@@ -697,7 +700,8 @@ function payBill(bankNum, biller, amt) {
 	bankAccount.balance -= amt;
 	// 3. Update transaction history
 	bankAccount.transactions.push(new Transaction(`Paid biller: ${biller}`, formatNum(-amt)));
-	console.log(`Paid Php ${amt} to ${biller}. New Balance is ${bankAccount.balance}`);
+	showNotif('Bills Payment successful!', 'success');
+	// console.log(`Paid Php ${amt} to ${biller}. New Balance is ${bankAccount.balance}`);
 	return bankAccount.balance;
 }
 /*
@@ -842,17 +846,19 @@ function showNotif(message, type) {
 	getNotif.classList.remove('d-none');
 	setTimeout(() => {
 		getNotif.className = 'alert d-none';
-	}, 1000);
+	}, 3000);
 }
 function addBudget(amt, type, desc) {
 	if (type === 'income') {
 		userObj.budgetList.push(new Transaction(`Income: ${desc}`, formatNum(amt)));
 		userObj.incBal += amt;
 		userObj.balance += amt;
+		showNotif('Income added', 'success');
 	} else if (type === 'expense') {
 		userObj.budgetList.push(new Transaction(`Expense: ${desc}`, formatNum(amt)));
 		userObj.expBal -= amt;
 		userObj.balance -= amt;
+		showNotif('Expense added', 'success');
 	}
 	dispBudget();
 }
